@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">MathMind</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">MATH-MIND</string>
+    <string name="menu_guesser">Guesser</string>
+    <string name="menu_feedBacker">FeedBacker</string>
+    <string name="guess_header">GUESSER</string>
+    <string name="guess_subText">Player will actively make some assumptions to find the number Application kept</string>
+    <string name="feedBacker_header">FEEDBACKER</string>
+    <string name="feedBacker_subText">Player will be passive and give feedback to application</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="sing_on_button">Sing On</string>
+    <string name="log_in_button">Log In</string>
+    <string name="enter_name">Enter your user name</string>
+    <string name="enter_password">Enter your password</string>
+    <string name="guess">Guess</string>
+    <string name="guessed_numbers">Guessed numbers</string>
+
+</resources>
