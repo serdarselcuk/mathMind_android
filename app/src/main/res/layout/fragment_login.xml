@@ -19,7 +19,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/textInputEditText"
+        android:id="@+id/textInputUserName"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_marginStart="60dp"
@@ -40,7 +40,7 @@
         android:hint="@string/enter_password"
         android:inputType="textPassword"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputEditText"
+        app:layout_constraintTop_toBottomOf="@+id/textInputUserName"
         />
 
     <Button
