@@ -22,5 +22,7 @@
     <string name="enter_password">Enter your password</string>
     <string name="guess">Guess</string>
     <string name="guessed_numbers">Guessed numbers</string>
+    <string name="plus_sign">+</string>
+    <string name="minus_sign">-</string>
 
 </resources>

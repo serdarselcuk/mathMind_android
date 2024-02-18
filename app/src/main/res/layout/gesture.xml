@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <TableRow
-        android:id="@+id/tableRow"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:id="@+id/guesture_history_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="1dp"
         android:layout_marginTop="1dp"
         android:layout_marginEnd="1dp"
@@ -25,25 +25,40 @@
             android:layout_width="227dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="" />
+            android:text=""
+            android:textSize="20sp" />
 
         <Space
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
-
         <TextView
-            android:id="@+id/placed_number"
-            android:layout_width="12dp"
+            android:id="@+id/placed_number_plus"
+            android:layout_width="10dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:textSize="20sp"
+            android:text="@string/plus_sign" />
+        <TextView
+            android:id="@+id/placed_number"
+            android:layout_width="17dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="20sp"
             android:text="" />
-
+        <TextView
+            android:id="@+id/placed_number_minus"
+            android:layout_width="10dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:text="@string/minus_sign" />
         <TextView
             android:id="@+id/not_placed_number"
             android:layout_width="17dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:textSize="20sp"
             android:text="" />
 
         <Space
