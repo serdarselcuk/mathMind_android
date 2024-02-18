@@ -1,13 +1,13 @@
-package com.example.mathmind.ui.guess
+package com.example.mathmind.models
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class GuessViewModel : ViewModel() {
+class FeedBackerViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is gallery Fragment"
+        value = "This is Feedbacker Fragment"
     }
     val text: LiveData<String> = _text
 }

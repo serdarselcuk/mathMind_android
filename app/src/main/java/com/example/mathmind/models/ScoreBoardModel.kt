@@ -1,8 +1,8 @@
-package com.example.mathmind.ui.scoreBoard
+package com.example.mathmind.models
 
 import java.sql.Date
 
-data class ScoreBoardData(
+data class ScoreBoardModel(
     val person_id: Int,
     val score: Int,
     val achived_date: Date

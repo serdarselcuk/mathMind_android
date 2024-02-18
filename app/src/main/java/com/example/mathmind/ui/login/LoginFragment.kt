@@ -14,8 +14,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.mathmind.R
 import com.example.mathmind.databinding.FragmentLoginBinding
+import com.example.mathmind.models.LoginViewModel
 import com.example.mathmind.service.CallService
-import com.example.mathmind.service.MathMindService
 
 class LoginFragment : Fragment() {
 

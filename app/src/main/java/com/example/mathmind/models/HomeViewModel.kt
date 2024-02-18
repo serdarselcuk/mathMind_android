@@ -1,4 +1,4 @@
-package com.example.mathmind.ui.home
+package com.example.mathmind.models
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -64,10 +64,10 @@
 
     <TextView
         android:id="@+id/guesture_history_header"
-        android:layout_width="330dp"
-        android:layout_height="34dp"
+        android:layout_width="339dp"
+        android:layout_height="33dp"
         android:layout_marginStart="36dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:text="@string/guessed_numbers"
         android:textAlignment="center"
         android:textSize="20sp"
@@ -86,12 +86,15 @@
 
     <ListView
         android:id="@+id/guesture_history_list"
-        android:layout_width="411dp"
-        android:layout_height="572dp"
-        android:layout_marginTop="12dp"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="349dp"
+        android:layout_height="553dp"
+        android:divider="@null"
+        android:fastScrollEnabled="true"
+        android:scrollbarStyle="insideInset"
+        android:textAlignment="gravity"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.58"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/guesture_history_header"
-        app:layout_constraintVertical_bias="0.0"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintVertical_bias="0.933" />
 </androidx.constraintlayout.widget.ConstraintLayout>

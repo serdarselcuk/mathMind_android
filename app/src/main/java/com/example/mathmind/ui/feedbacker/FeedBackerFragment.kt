@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mathmind.databinding.FragmentFeedbackerBinding
+import com.example.mathmind.models.FeedBackerViewModel
 
 class FeedBackerFragment : Fragment() {
 

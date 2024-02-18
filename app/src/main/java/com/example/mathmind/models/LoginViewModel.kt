@@ -1,4 +1,4 @@
-package com.example.mathmind.ui.login
+package com.example.mathmind.models
 
 import androidx.lifecycle.ViewModel
 

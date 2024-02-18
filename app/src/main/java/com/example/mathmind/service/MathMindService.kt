@@ -1,6 +1,6 @@
 package com.example.mathmind.service
 
-import com.example.mathmind.ui.scoreBoard.ScoreBoardData
+import com.example.mathmind.models.ScoreBoardModel
 import com.example.mathmind.ui.scoreBoard.UserData
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -36,7 +36,7 @@ object RequestInterceptor : Interceptor {
 interface MathMindService {
 
     @GET("/score")
-    fun getScore() : Call<ScoreBoardData>
+    fun getScore() : Call<ScoreBoardModel>
 
     @POST("/score")
     fun setScore() :String
@@ -48,6 +48,6 @@ interface MathMindService {
     fun createUser() : String
 
     @GET("/score/all")
-    fun getAllScore() : Array<ScoreBoardData>
+    fun getAllScore() : Array<ScoreBoardModel>
 
 }
