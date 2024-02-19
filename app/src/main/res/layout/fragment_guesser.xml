@@ -68,7 +68,7 @@
         android:layout_height="33dp"
         android:layout_marginStart="36dp"
         android:layout_marginTop="20dp"
-        android:text="@string/guessed_numbers"
+        android:text="@string/guessed_numbers_list_header"
         android:textAlignment="center"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"

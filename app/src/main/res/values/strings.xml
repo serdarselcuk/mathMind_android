@@ -21,7 +21,8 @@
     <string name="enter_name">Enter your user name</string>
     <string name="enter_password">Enter your password</string>
     <string name="guess">Guess</string>
-    <string name="guessed_numbers">Guessed numbers</string>
+    <string name="guessed_numbers_list_header">Guessed numbers history</string>
+    <string name="numbers_count"> -count: %d</string>
     <string name="plus_sign">+</string>
     <string name="minus_sign">-</string>
 

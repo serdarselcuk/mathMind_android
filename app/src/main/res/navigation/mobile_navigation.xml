@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_login_to_nav_home"
             app:destination="@id/nav_home" />
+        <action
+            android:id="@+id/action_nav_login_to_signOn"
+            app:destination="@id/signOn" />
     </fragment>
 
     <fragment
@@ -45,5 +48,14 @@
         android:label="@string/menu_feedBacker"
         tools:layout="@layout/fragment_feedbacker" >
 
+    </fragment>
+    <fragment
+        android:id="@+id/signOn"
+        android:name="com.example.mathmind.SignOn"
+        android:label="fragment_sign_on"
+        tools:layout="@layout/fragment_sign_on" >
+        <action
+            android:id="@+id/action_signOn_to_nav_login"
+            app:destination="@id/nav_login" />
     </fragment>
 </navigation>

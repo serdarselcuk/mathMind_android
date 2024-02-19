@@ -1,6 +1,5 @@
 package com.example.mathmind.ui.guess
 
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,14 +9,20 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
-import android.widget.TableRow
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.mathmind.R
 import com.example.mathmind.databinding.FragmentGuesserBinding
 import com.example.mathmind.models.GuessModel
 import com.example.mathmind.models.GuessViewModel
+import com.example.mathmind.utils.RandomGenerator
+import com.example.mathmind.utils.Utility.Companion.arrayToNum
+import com.example.mathmind.utils.Utility.Companion.highlightElement
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class GuesserFragment : Fragment() {
 
@@ -28,10 +33,11 @@ class GuesserFragment : Fragment() {
     lateinit var digit_cell_3: EditText
     lateinit var digit_cell_4: EditText
     lateinit var guess_button: Button
+    lateinit var guesser_header: TextView
     lateinit var guessNumberCells: Array<EditText>
     var guessed_number_list: MutableList<GuessModel> = mutableListOf()
     lateinit var guessed_list_view: ListView
-    val numberKept = 4568
+    val numberKept = RandomGenerator().generateRandom4uniqueDigit(4)
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -54,7 +60,7 @@ class GuesserFragment : Fragment() {
         digit_cell_2 = binding.guessingNumber2
         digit_cell_3 = binding.guessingNumber3
         digit_cell_4 = binding.guessingNumber4
-
+        guesser_header = binding.guestureHistoryHeader
         val guessHistoryAdapter = GuestureHistoryAdapter(requireContext(), guessed_number_list)
         guessed_list_view.adapter = guessHistoryAdapter
 
@@ -71,49 +77,103 @@ class GuesserFragment : Fragment() {
         }
 
         guess_button.setOnClickListener {
-
+            makeListElementsColorDefault()
             val numberArray = validateCells(guessNumberCells)
 
             if (numberArray != null)  // validate cell can return null if any duplicated num
             {
                 val data = GuessModel(
-                    toNum(numberArray), // guessed number
+                    arrayToNum(numberArray), // guessed number
                     0,//correctly placed number
                     0 // numbers on wrong place
                 )
                 evaluateNumber(data) // decide about feedback
                 if (guessed_number_list.contains(data)) {
-                    highLightListFromHistory(data)
+                    lifecycleScope.launch {
+                        highLightListFromHistory(data, R.color.red_highlight, true)
+                    }
+                    lifecycleScope.launch {
+                        highlightElement(digit_cell_1 ,R.color.red_highlight, requireContext(),true)
+                    }
+                    lifecycleScope.launch {
+                        highlightElement(digit_cell_2 ,R.color.red_highlight, requireContext(),true)
+                    }
+                    lifecycleScope.launch {
+                        highlightElement(digit_cell_3 ,R.color.red_highlight, requireContext(),true)
+                    }
+                    lifecycleScope.launch {
+                        highlightElement(digit_cell_4 ,R.color.red_highlight, requireContext(),true)
+                    }
                 } else if (data.placedNumber < 4) {
                     guessed_number_list.add(data)
-                    guessHistoryAdapter.notifyDataSetChanged()
+                    lifecycleScope.launch {
+                        updateGuessCount() //might be async
+                        guessHistoryAdapter.notifyDataSetChanged()
+                    }
                 } else {
                     endGame()
                 }
             }
-        }
+
 
 //        val textView: TextView = binding.guestureHistoryList
 //        guessViewModel.text.observe(viewLifecycleOwner) {
 //            textView.text = it
 //        }
-
+        }
         return root
     }
 
-    private fun highLightListFromHistory(data: GuessModel) {
-
-        var obj: ListView? = view?.findViewById(R.id.guesture_history_list)
-        var childCount: Int? = obj?.childCount
-        if (childCount is Int && childCount > 0) {
-            for (i in 0 until childCount) {
-                var obj_2 : TextView? = obj?.getChildAt(i)?.findViewById(R.id.guessed_number)
-                if (obj_2?.text?.equals(data.guessedNumber.toString()) == true){
-                    println("element found to highlight: ${obj_2?.id}")
-                    obj_2?.setBackgroundColor(Color.RED)
+    private fun makeListElementsColorDefault() {
+        val obj: ListView? = view?.findViewById(R.id.guesture_history_list)
+        val childCount: Int? = obj?.childCount
+            if (childCount is Int && childCount > 0) {
+                for (i in 0 until childCount) {
+                    val obj_2 : TextView? = obj?.getChildAt(i)?.findViewById(R.id.guessed_number)
+                    val color = context?.let { ContextCompat.getColor(it, R.color.white) }
+                    color?.let { obj_2?.setBackgroundColor(it)
                 }
             }
         }
+    }
+
+    private fun updateGuessCount(){
+        if(guessed_number_list.size>0){
+            val countText = resources.getString(R.string.numbers_count, guessed_number_list.size)
+            val headerText = resources.getString(R.string.guessed_numbers_list_header)
+            val updatedHeader = "$headerText $countText"
+            guesser_header.text = updatedHeader
+        }
+
+    }
+
+    private suspend fun highLightListFromHistory(data: GuessModel, color:Int=R.color.red_highlight, flash:Boolean=false) {
+
+        val element: View? = findListElementByText(
+            R.id.guesture_history_list,
+            R.id.guessed_number,
+            data.guessedNumber.toString()
+        )
+        if(element is View){
+            lifecycleScope.launch{
+                highlightElement( element, color,  requireContext(),flash )
+            }
+        }
+
+    }
+
+    private fun findListElementByText(listViewId: Int, childViewId:Int, text:String):View?{
+        val obj: ListView? = view?.findViewById(listViewId)
+        val childCount: Int? = obj?.childCount
+        if (childCount is Int && childCount > 0) {
+            for (i in 0 until childCount) {
+                val obj_2 : TextView? = obj.getChildAt(i)?.findViewById(childViewId)
+                if (obj_2?.text?.equals(text) == true){
+                    return obj_2
+                }
+            }
+        }
+        return null
     }
 
     override fun onDestroyView() {
@@ -125,7 +185,9 @@ class GuesserFragment : Fragment() {
 
         textInput.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                textInput.setBackgroundColor(Color.YELLOW)
+                lifecycleScope.launch{
+                    highlightElement(textInput, R.color.yellow_highlight,  requireContext(),false )
+                }
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -148,7 +210,7 @@ class GuesserFragment : Fragment() {
     }
 
 
-    fun focusListenerForDigitCells(view: View) {
+    private fun focusListenerForDigitCells(view: View) {
         view.setOnFocusChangeListener { it, hasFocus ->
             if (hasFocus && it is EditText) {
                 println("focus on ${it.id} and cleaning cell")
@@ -159,13 +221,13 @@ class GuesserFragment : Fragment() {
 
     }
 
-    private fun validateCells(num_cell_array: Array<EditText>): IntArray? {
-        var iterateCells: Iterator<EditText> = num_cell_array.iterator()
-        var guessed_number = IntArray(4)
+    private fun validateCells(numCellArray: Array<EditText>): IntArray? {
+        val iterateCells: Iterator<EditText> = numCellArray.iterator()
+        val guessed_number = IntArray(4)
         var i = 0
         while (iterateCells.hasNext()) {
-            var cell: EditText = iterateCells.next()
-            var number = cell.text?.toString()?.toInt() ?: -1
+            val cell: EditText = iterateCells.next()
+            val number = if(cell.text!=null) cell.text.toString().toInt() else -1
             if (number < 0 || guessed_number.contains(number)) {
                 cell.requestFocus()
                 return null
@@ -202,12 +264,9 @@ class GuesserFragment : Fragment() {
         }
     }
 
-    fun endGame() {
+    private fun endGame() {
         println("game end")
 //        TODO(end of the game)
     }
 
-    fun toNum(array: IntArray): Int {
-        return "${array[0]}${array[1]}${array[2]}${array[3]}".toInt()
-    }
 }

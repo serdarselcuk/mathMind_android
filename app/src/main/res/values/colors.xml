@@ -8,4 +8,6 @@
     <color name="black">#FF000000</color>
     <color name="coolGrey">#4F6B9AA0</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="red_highlight">#90E13737</color>
+    <color name="yellow_highlight">#A1FFEB3B</color>
 </resources>
