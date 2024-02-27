@@ -16,7 +16,7 @@
     <string name="feedBacker_subText">Player will be passive and give feedback to application</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="sing_on_button">Sing On</string>
+    <string name="sing_on_button">Sign On</string>
     <string name="log_in_button">Log In</string>
     <string name="enter_name">Enter your user name</string>
     <string name="enter_password">Enter your password</string>
@@ -25,5 +25,11 @@
     <string name="numbers_count"> -count: %d</string>
     <string name="plus_sign">+</string>
     <string name="minus_sign">-</string>
+    <string name="username">userName</string>
+    <string name="Password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="email_address">Email address</string>
 
 </resources>

@@ -45,7 +45,7 @@ class LoginFragment : Fragment() {
 //            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 //        val navController = navHostFragment.navController
         val loginViewModel =
-            ViewModelProvider(this).get(LoginViewModel::class.java)
+            ViewModelProvider(this)[LoginViewModel::class.java]
 
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -54,13 +54,14 @@ class LoginFragment : Fragment() {
         signOnButton = binding.buttonSignOn
 
         logInButton.setOnClickListener {
+//            LoginActivity().validateUser(
+//                userName, password)
             CallService().calling()
             this.findNavController().navigate(R.id.action_login_to_nav_home)
         }
 
         signOnButton.setOnClickListener{
-            LoginActivity().validateUser(
-                userName, password)
+            this.findNavController().navigate(R.id.nav_signOn)
         }
 
         val loginNameInput: EditText = binding.textInputUserName

@@ -15,7 +15,7 @@
             app:destination="@id/nav_home" />
         <action
             android:id="@+id/action_nav_login_to_signOn"
-            app:destination="@id/signOn" />
+            app:destination="@id/nav_signOn" />
     </fragment>
 
     <fragment
@@ -50,8 +50,8 @@
 
     </fragment>
     <fragment
-        android:id="@+id/signOn"
-        android:name="com.example.mathmind.SignOn"
+        android:id="@+id/nav_signOn"
+        android:name="com.example.mathmind.ui.signOn.SignOnFragment"
         android:label="fragment_sign_on"
         tools:layout="@layout/fragment_sign_on" >
         <action

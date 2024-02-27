@@ -16,20 +16,20 @@ class RandomGenerator(
         return Base64.getEncoder().encodeToString(salt);
     }
 
-    fun generateRandom4uniqueDigit(size:Int):Int {
+    fun generateRandomUniqueDigits(size:Int, digits: MutableSet<Int> = mutableSetOf()):Int {
         var result = 0
-        var usedDigits = mutableSetOf<Int>()
-
         repeat(size) {
             var digit: Int
+
+        // if it is first digit it can not be 0. Also we are not allowing duplicated numbers
             do {
                 digit = secureRandom.nextInt(10)
-            } while (usedDigits.contains(digit))
+            } while ((result < 10 && digit == 0) || digits.contains(digit))
 
-            usedDigits.add(digit)
+            digits.add(digit)
             result = result * 10 + digit
         }
-
+        println("number kept : "+result)
         return result
     }
 }

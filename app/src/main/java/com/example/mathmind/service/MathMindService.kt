@@ -9,6 +9,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 object RetrofitClient {
     private const val BASE_URL = "http://192.168.1.58:8080/"
@@ -38,16 +39,7 @@ interface MathMindService {
     @GET("/score")
     fun getScore() : Call<ScoreBoardModel>
 
-    @POST("/score")
-    fun setScore() :String
-
-    @POST("user/auth")
-    fun getUser() : Call<UserData>
-
-    @POST("user/new")
-    fun createUser() : String
-
-    @GET("/score/all")
-    fun getAllScore() : Array<ScoreBoardModel>
+    @POST("/user/validate")
+    fun validateUser(@Query("param_1") param1:String) : Call<Boolean>
 
 }

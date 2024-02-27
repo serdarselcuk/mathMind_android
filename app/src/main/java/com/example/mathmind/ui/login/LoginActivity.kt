@@ -1,21 +1,14 @@
 package com.example.mathmind.ui.login
 
-class LoginActivity {
-    private val password_validation:Regex = Regex(
-        "^(?=(.*[a-z]))" +//   1 lower case
-                "(?=(.*[A-Z]))" +//   1 capital case
-                "(?=.*[?!@#*%^&-+])" +//    1 special char
-                "(?=(.*\\d))" +//    1 digit
-                "[a-zA-Z?!@#*%^&-+\\d]{8}$")// 8 character
+import com.example.mathmind.utils.Utility
 
-    fun validatePassword(string: String):Boolean{
-        return password_validation.matches(string)
-    }
+class LoginActivity {
+
 
     fun validateUser(name:String, password:String):String{
         var authToken:String= getAuthToken(name)
 //      TODO() implement throwing error when validation fails
-        return if(validatePassword(password)&&decryptAutToken(authToken,password))  "userName" else ""
+        return if(true) "userName" else ""
 
     }
 
