@@ -53,5 +53,26 @@ class CallService{
         })
     }
 
+    fun saveUser(user: UserModel, callback: (String?) -> Unit) {
+
+        val call = mathMindService.saveUser(user)
+        call.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    println("call succeeded: response ${response.body()}")
+                    callback(response.body())
+                } else {
+                    println("Unsuccessful response ${response.message()}")
+                    callback(null)
+                }
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                println("Failure ${t.message}")
+                callback(null)
+            }
+        })
+    }
+
 
 }

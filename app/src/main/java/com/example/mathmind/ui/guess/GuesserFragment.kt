@@ -127,11 +127,11 @@ class GuesserFragment : Fragment() {
     private fun makeListElementsColorDefault() {
         val obj: ListView? = view?.findViewById(R.id.guesture_history_list)
         val childCount: Int? = obj?.childCount
-            if (childCount is Int && childCount > 0) {
-                for (i in 0 until childCount) {
-                    val obj2 : TextView? = obj.getChildAt(i)?.findViewById(R.id.guessed_number)
-                    val color = context?.let { ContextCompat.getColor(it, R.color.white) }
-                    color?.let { obj2?.setBackgroundColor(it)
+        if (childCount is Int && childCount > 0) {
+            for (i in 0 until childCount) {
+                val obj2 : TextView? = obj.getChildAt(i)?.findViewById(R.id.guessed_number)
+                val color = context?.let { ContextCompat.getColor(it, R.color.white) }
+                color?.let { obj2?.setBackgroundColor(it)
                 }
             }
         }
@@ -214,7 +214,6 @@ class GuesserFragment : Fragment() {
         view.setOnFocusChangeListener { it, hasFocus ->
             if (hasFocus && it is EditText) {
                 println("focus on ${it.id} and cleaning cell")
-//                setFocussedCell(it.id)
                 it.setText("")
             }
         }

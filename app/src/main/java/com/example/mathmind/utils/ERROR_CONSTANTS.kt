@@ -2,6 +2,7 @@ package com.example.mathmind.utils
 
 class ERROR_CONSTANTS {
     companion object{
+        const val REQUIRED = "Required field"
         const val USER_EXISTS = "User exists. Please try another name"
         const val SERVICE_ERROR = "Service Error"
         const val PASSWORD_EMPTY = "Please provide a password"

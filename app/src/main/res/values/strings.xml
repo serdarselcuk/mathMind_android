@@ -31,5 +31,7 @@
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="email_address">Email address</string>
+    <string name="lastName">Last Name</string>
+    <string name="firstName">First Name</string>
 
 </resources>

@@ -1,12 +1,13 @@
 package com.example.mathmind.service
 
 import com.example.mathmind.models.ScoreBoardModel
-import com.example.mathmind.ui.scoreBoard.UserData
+import com.example.mathmind.models.UserModel
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -41,5 +42,8 @@ interface MathMindService {
 
     @POST("/user/validate")
     fun validateUser(@Query("param_1") param1:String) : Call<Boolean>
+
+    @POST("/user/save")
+    fun saveUser(@Body user: UserModel):Call<String>
 
 }
