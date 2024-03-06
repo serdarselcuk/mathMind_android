@@ -6,5 +6,7 @@ data class UserModel(
      val savedDate:  String,
      val firstName:  String,
      val secondName:  String,
-     val email: String
+     val email: String,
+     val password: String,
+     val hashCode: String
 )

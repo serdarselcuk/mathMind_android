@@ -1,7 +1,9 @@
 package com.example.mathmind.service
 
+import com.example.mathmind.models.Password
 import com.example.mathmind.models.ScoreBoardModel
 import com.example.mathmind.models.UserModel
+import com.google.gson.GsonBuilder
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Call
@@ -14,6 +16,7 @@ import retrofit2.http.Query
 
 object RetrofitClient {
     private const val BASE_URL = "http://192.168.1.58:8080/"
+    val gson = GsonBuilder().setLenient().create()
 
     val okHttpClient = OkHttpClient()
         .newBuilder()
@@ -23,7 +26,7 @@ object RetrofitClient {
         Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
 }
 
@@ -45,5 +48,8 @@ interface MathMindService {
 
     @POST("/user/save")
     fun saveUser(@Body user: UserModel):Call<String>
+
+    @POST("auth/save")
+    fun savePassword(@Body password:Password):Call<String>
 
 }

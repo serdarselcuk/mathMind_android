@@ -33,5 +33,12 @@
     <string name="email_address">Email address</string>
     <string name="lastName">Last Name</string>
     <string name="firstName">First Name</string>
+    <string name="OK_BUTTON">OK</string>
+    <string name="date_pattern">yyyy-MM-dd</string>
+    <string name="empty_string" />
+    <string name="please_login_with">You can login with your user name and password</string>
+    <string name="user_saved">USER CREATED!</string>
+    <string name="please_try_later">Please try again later</string>
+    <string name="user_failed">User creation failed!</string>
 
 </resources>

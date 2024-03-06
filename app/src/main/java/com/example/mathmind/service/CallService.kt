@@ -1,5 +1,6 @@
 package com.example.mathmind.service
 
+import com.example.mathmind.models.Password
 import com.example.mathmind.models.ScoreBoardModel
 import com.example.mathmind.models.UserModel
 import retrofit2.Call
@@ -9,6 +10,7 @@ import retrofit2.Response
 class CallService{
     val retrofitData = RetrofitClient.getClient()
     val mathMindService: MathMindService = retrofitData.create(MathMindService::class.java)
+
     fun calling() {
 
        val call = mathMindService.getScore()
@@ -56,6 +58,30 @@ class CallService{
     fun saveUser(user: UserModel, callback: (String?) -> Unit) {
 
         val call = mathMindService.saveUser(user)
+        call.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    println("call succeeded: response ${response.body()}")
+                    callback(response.body())
+                } else {
+                    println("Unsuccessful response ${response.message()}")
+                    // Log the entire response body for more details
+                    println("Response body: ${response.errorBody()?.string()}")
+                    callback(null)
+                }
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                println("Failure ${t.message}")
+                t.printStackTrace() // Log the full stack trace
+                callback(null)
+            }
+        })
+    }
+
+    fun savePassword(password: Password, callback: (String?) -> Unit) {
+
+        val call = mathMindService.savePassword(password)
         call.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.isSuccessful) {

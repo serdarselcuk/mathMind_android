@@ -1,5 +1,8 @@
 package com.example.mathmind.ui.signOn
 
+import android.accounts.AuthenticatorException
+import android.app.AlertDialog
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +23,14 @@ import com.example.mathmind.utils.Utility.Companion.checkEmail
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import androidx.navigation.findNavController
+import com.example.mathmind.models.Password
+import com.example.mathmind.utils.PasswordHasher
+import com.example.mathmind.utils.RandomGenerator
+import kotlinx.coroutines.delay
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class SignOnFragment : Fragment() {
     private var _binding: FragmentSignOnBinding? = null
@@ -95,7 +106,30 @@ class SignOnFragment : Fragment() {
 
                         if (errors.isEmpty()) {
                             errorTextInput.visibility = View.GONE
-                            createUser(LocalDate.now())
+//                           .beginTransaction()
+//                                .add(android.R.id.content, loadingFragment)
+//                                .commit()
+                            try {
+                                val hashKey = RandomGenerator().generateSalt()
+                                val hashed_password = PasswordHasher
+                                    .hashPassword(password,hashKey)?: throw AuthenticatorException(ERROR_CONSTANTS.SERVICE_ERROR)
+                                createUser(LocalDate.now(), hashKey, hashed_password)
+                                showDialog(
+                                    getString(R.string.user_saved),
+                                    getString(R.string.please_login_with))
+                            }catch (e:Error){
+                                errorTextInput.text = e.message
+                                View.VISIBLE
+                            }catch (e2:AuthenticatorException){
+                                errorTextInput.text = e2.message
+                                View.VISIBLE
+
+                            }catch (e3: Exception){
+                                showDialog(
+                                    getString(R.string.user_failed),
+                                    getString(R.string.please_try_later))
+                                View.VISIBLE
+                            }
                         } else {
                             errorTextInput.visibility = View.VISIBLE
                             errorTextInput.text = errors.joinToString("\n", "Errors\n")
@@ -118,8 +152,27 @@ class SignOnFragment : Fragment() {
                     this.findNavController().navigate(R.id.nav_login)
                 }
         }
-
     }
+
+//    private suspend fun savePassword(userId: Int):String? {
+//        val hashKey = RandomGenerator().generateSalt()
+//        val hashed = PasswordHasher
+//            .hashPassword(password,hashKey)
+//        return if(hashed is String) {
+//            suspendCoroutine { continuation ->
+//                CallService().savePassword(
+//                    Password(
+//                        hashed,
+//                        hashKey,
+//                        userId
+//                    )
+//                ) { callback ->
+//                    println(callback.toString())
+//                    continuation.resume(callback)
+//                }
+//            }
+//        } else throw Error("hashing error")
+//    }
 
     private fun addConfirmPasswordFocusListener(confirmPasswordInput: EditText) {
 
@@ -158,7 +211,7 @@ class SignOnFragment : Fragment() {
                         passwordError.text = e.message
                     }
                 } else {
-                    password = ""
+                    password = getString(R.string.empty_string)
                     passwordError.text = null
                 }
             }
@@ -183,8 +236,8 @@ class SignOnFragment : Fragment() {
                     }
                 } else {
                     when (nameInput.id) {
-                        R.id.firstNameInput -> firstName = ""
-                        R.id.lastNameInput -> lastName = ""
+                        R.id.firstNameInput -> firstName = getString(R.string.empty_string)
+                        R.id.lastNameInput -> lastName = getString(R.string.empty_string)
                     }
                     nameError.text = null
                 }
@@ -208,41 +261,46 @@ class SignOnFragment : Fragment() {
                         } else {
                             errorTextInput.text = ERROR_CONSTANTS.SERVICE_ERROR
                             // Handle the case where an error occurred
-                            println("Service Error occurred ")
+                            println(ERROR_CONSTANTS.SERVICE_ERROR)
                         }
                     }
                 } else {
                     userNameError.text = null
-                    userName = ""
+                    userName = getString(R.string.empty_string)
                 }
             }
 
         }
     }
 
-    private fun createUser(date: LocalDate) {
+    private fun createUser(date: LocalDate, hash: String, hashedPassword: String) {
         // Define the desired date format
-        lifecycleScope.launch {
-            val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val formatter: DateTimeFormatter =
+            DateTimeFormatter.ofPattern(getString(R.string.date_pattern))
 
-            val user = UserModel(
+        return CallService().saveUser(
+            UserModel(
                 null,
                 userName,
                 date.format(formatter),
                 firstName,
                 lastName,
-                email
+                email,
+                hashedPassword,
+                hash
             )
-            CallService().saveUser(user) { _user ->
-                if (_user != null) {
-                    println("success userExists in callback ${_user}")
-                } else {
-                    errorTextInput.text = ERROR_CONSTANTS.SERVICE_ERROR
-                    // Handle the case where an error occurred
-                    println("Service Error occurred. User not saved \n $_user")
-                } }
+        ) { response ->
+            if (response != null) {
+                println("in callback $response")
+                response.toString()
+            } else {
+                // Handle the case where an error occurred
+                println("Service Error occurred. User not saved. Response: $response")
+                throw Error(ERROR_CONSTANTS.SERVICE_ERROR)
+            }
         }
     }
+
 
     private fun checkAllEmptyInputs() : MutableList<String>{
 
@@ -304,5 +362,19 @@ class SignOnFragment : Fragment() {
             }
         }
     }
+
+    private fun showDialog(title:String, message:String) {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle(title)
+            .setMessage(message)
+            .setPositiveButton(getString(R.string.OK_BUTTON)) { dialog, _ ->
+                dialog.dismiss()
+                // Navigate to the login screen
+                view?.findNavController()?.navigate(R.id.nav_login)
+            }
+        val dialog = builder.create()
+        dialog.show()
+    }
+
 
 }
