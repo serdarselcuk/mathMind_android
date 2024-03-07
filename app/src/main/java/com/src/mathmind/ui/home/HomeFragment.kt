@@ -16,7 +16,7 @@ import com.src.mathmind.models.HomeViewModel
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
-    lateinit var guessButton: ImageButton
+    lateinit var guesserButton: ImageButton
     lateinit var feedBackerButton: ImageButton
 
     // This property is only valid between onCreateView and
@@ -39,10 +39,10 @@ class HomeFragment : Fragment() {
             textView.text = it
         }
 
-        guessButton = binding.guessButton
+        guesserButton = binding.guesserButton
         feedBackerButton = binding.feedbackerButton
 
-        guessButton.setOnClickListener {
+        guesserButton.setOnClickListener {
             findNavController().navigate(R.id.action_nav_home_to_nav_guesser)
         }
 
