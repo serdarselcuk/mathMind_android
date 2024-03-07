@@ -16,7 +16,7 @@
         android:theme="@style/Theme.MathMind"
         tools:targetApi="tiramisu">
         <activity
-            android:name=".MainActivity"
+            android:name="com.src.mathmind.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.MathMind.NoActionBar">
             <intent-filter>

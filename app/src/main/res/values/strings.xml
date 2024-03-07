@@ -40,5 +40,7 @@
     <string name="user_saved">USER CREATED!</string>
     <string name="please_try_later">Please try again later</string>
     <string name="user_failed">User creation failed!</string>
+    <string name="game_end">GAME END!</string>
+    <string name="you_win">Congradulations You Win</string>
 
 </resources>

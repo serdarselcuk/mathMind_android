@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_login"
-        android:name="com.example.mathmind.ui.login.LoginFragment"
+        android:name="com.src.mathmind.ui.login.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -20,7 +20,7 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.mathmind.ui.home.HomeFragment"
+        android:name="com.src.mathmind.ui.home.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -36,22 +36,28 @@
 
     <fragment
         android:id="@+id/nav_guesser"
-        android:name="com.example.mathmind.ui.guess.GuesserFragment"
+        android:name="com.src.mathmind.ui.guesser.GuesserFragment"
         android:label="@string/menu_guesser"
         tools:layout="@layout/fragment_guesser" >
 
+        <action
+            android:id="@+id/action_nav_guesser_to_nav_home"
+            app:destination="@id/nav_home" />
     </fragment>
 
     <fragment
         android:id="@+id/nav_feedbacker"
-        android:name="com.example.mathmind.ui.feedbacker.FeedBackerFragment"
+        android:name="com.src.mathmind.ui.feedbacker.FeedBackerFragment"
         android:label="@string/menu_feedBacker"
         tools:layout="@layout/fragment_feedbacker" >
 
+        <action
+            android:id="@+id/action_nav_feedbacker_to_nav_home"
+            app:destination="@id/nav_home" />
     </fragment>
     <fragment
         android:id="@+id/nav_signOn"
-        android:name="com.example.mathmind.ui.signOn.SignOnFragment"
+        android:name="com.src.mathmind.ui.signOn.SignOnFragment"
         android:label="fragment_sign_on"
         tools:layout="@layout/fragment_sign_on" >
         <action

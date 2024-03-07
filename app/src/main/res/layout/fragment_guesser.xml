@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.guess.GuesserFragment">
+    tools:context=".ui.guesser.GuesserFragment">
 
     <EditText
         android:id="@+id/guessing_number_1"
