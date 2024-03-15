@@ -1,13 +1,16 @@
 package com.src.mathmind.ui.login
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -15,7 +18,6 @@ import androidx.navigation.fragment.findNavController
 import com.src.mathmind.R
 import com.src.mathmind.databinding.FragmentLoginBinding
 import com.src.mathmind.models.LoginViewModel
-import com.src.mathmind.service.CallService
 
 class LoginFragment : Fragment() {
 
@@ -23,10 +25,12 @@ class LoginFragment : Fragment() {
         fun newInstance() = LoginActivity()
     }
 
-    lateinit var logInButton:Button
-    lateinit var signOnButton:Button
-    lateinit var userName:String
-    lateinit var password:String
+    lateinit var userNameField: TextView
+    lateinit var passwordField: TextView
+    lateinit var logInButton: Button
+    lateinit var signOnButton: Button
+    lateinit var userName: String
+    lateinit var password: String
 
 
     private var _binding: FragmentLoginBinding? = null
@@ -44,24 +48,59 @@ class LoginFragment : Fragment() {
 //        val navHostFragment =
 //            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 //        val navController = navHostFragment.navController
-        val loginViewModel =
-            ViewModelProvider(this)[LoginViewModel::class.java]
+        viewModel = ViewModelProvider(this)[LoginViewModel::class.java]
 
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         logInButton = binding.buttonLogin
         signOnButton = binding.buttonSignOn
+        userNameField = binding.textInputUserName
+        passwordField = binding.editTextTextPassword
 
         logInButton.setOnClickListener {
-//            LoginActivity().validateUser(
-//                userName, password)
-            CallService().calling()
-            this.findNavController().navigate(R.id.action_login_to_nav_home)
+            userName = userNameField.text.toString()
+            password = passwordField.text.toString()
+            if (userName.isBlank()) {
+                userNameField.error = "Provide your user name"
+            } else if (password.isBlank()) {
+                passwordField.error = "Please enter password"
+            } else {
+                viewModel.validateUser(userName, password)
+//                viewModel.viewModelScope.launch {
+//                    try {
+//                        val user: UserModel? = LoginActivity().getValidatedUser(userName, password)
+//                        if (user == null) {
+//                            Log.d("Validation failed", "User or Password is not found")
+//                            showDialog("Validation failed", "User or Password is not found")
+//                        }
+//                    } catch (e: Error) {
+//                        Log.e(e.message, e.printStackTrace().toString())
+//                        showDialog("Error", "Something went wrong")
+//                    }
+//                }
+//                this.findNavController().navigate(R.id.action_login_to_nav_home)
+            }
         }
 
-        signOnButton.setOnClickListener{
-            this.findNavController().navigate(R.id.nav_signOn)
+        signOnButton.setOnClickListener {
+            navigateTo(R.id.nav_signOn)
+        }
+
+        viewModel.loginViewState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is LoginViewState.ValidationSuccess -> {
+                    navigateTo(R.id.action_login_to_nav_home)
+                }
+
+                is LoginViewState.ValidationError -> {
+                    showDialog("Validation failed", state.message)
+                }
+
+                is LoginViewState.Error -> {
+                    showDialog("Error", state.message)
+                }
+            }
         }
 
         val loginNameInput: EditText = binding.textInputUserName
@@ -103,12 +142,34 @@ class LoginFragment : Fragment() {
         })
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
-        // TODO: Use the ViewModel
+//    override fun onActivityCreated(savedInstanceState: Bundle?) {
+//        super.onActivityCreated(savedInstanceState)
+//        viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
+//        // TODO: Use the ViewModel
+//    }
+
+    private fun showDialog(title: String, message: String) {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle(title)
+            .setMessage(message)
+            .setPositiveButton(getString(R.string.OK_BUTTON)) { dialog, _ ->
+                dialog.dismiss()
+                // Navigate to the login screen
+            }
+        val dialog = builder.create()
+        dialog.show()
     }
 
+    override fun onDestroy() {
+        userNameField.text = ""
+        passwordField.text = ""
+        userName = ""
+        password = ""
+        super.onDestroy()
+    }
 
-
+    private fun navigateTo(id: Int) {
+        onDestroy()
+        findNavController().navigate(id)
+    }
 }

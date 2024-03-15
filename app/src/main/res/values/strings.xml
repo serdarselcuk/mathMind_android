@@ -41,6 +41,8 @@
     <string name="please_try_later">Please try again later</string>
     <string name="user_failed">User creation failed!</string>
     <string name="game_end">GAME END!</string>
-    <string name="you_win">Congradulations You Win</string>
+    <string name="you_win">Congratulations You Won</string>
+    <string name="sign_on_header">Sing On</string>
+    <string name="fragment_login">Login</string>
 
 </resources>

@@ -5,11 +5,14 @@ import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getString
 import androidx.navigation.findNavController
 import com.src.mathmind.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.regex.Pattern
 import com.src.mathmind.utils.ERROR_CONSTANTS.Companion as ERROR
 
@@ -89,6 +92,14 @@ class Utility {
                 )
 
             return password
+        }
+
+        fun getCurrentDate(pattern:String): String {
+            // Define the desired date format
+            val formatter: DateTimeFormatter =
+                DateTimeFormatter.ofPattern(pattern)
+            return LocalDate.now().format(formatter)
+
         }
     }
 }

@@ -25,6 +25,7 @@ import java.time.format.DateTimeFormatter
 import androidx.navigation.findNavController
 import com.src.mathmind.utils.PasswordHasher
 import com.src.mathmind.utils.RandomGenerator
+import com.src.mathmind.utils.Utility.Companion.getCurrentDate
 
 class SignOnFragment : Fragment() {
     private var _binding: FragmentSignOnBinding? = null
@@ -107,11 +108,16 @@ class SignOnFragment : Fragment() {
                                 val hashKey = RandomGenerator().generateSalt()
                                 val hashed_password = PasswordHasher
                                     .hashPassword(password,hashKey)?: throw AuthenticatorException(ERROR_CONSTANTS.SERVICE_ERROR)
-                                createUser(LocalDate.now(), hashKey, hashed_password)
+                                createUser(
+                                    getCurrentDate(getString(R.string.date_pattern)),
+                                    hashKey,
+                                    hashed_password)
+
                                 showDialog(
                                     getString(R.string.user_saved),
                                     getString(R.string.please_login_with),
                                     R.id.action_signOn_to_nav_login)
+
                             }catch (e:Error){
                                 errorTextInput.text = e.message
                                 View.VISIBLE
@@ -268,16 +274,13 @@ class SignOnFragment : Fragment() {
         }
     }
 
-    private fun createUser(date: LocalDate, hash: String, hashedPassword: String) {
-        // Define the desired date format
-        val formatter: DateTimeFormatter =
-            DateTimeFormatter.ofPattern(getString(R.string.date_pattern))
+    private fun createUser(date: String, hash: String, hashedPassword: String) {
 
         return CallService().saveUser(
             UserModel(
                 null,
                 userName,
-                date.format(formatter),
+                date,
                 firstName,
                 lastName,
                 email,
@@ -370,6 +373,5 @@ class SignOnFragment : Fragment() {
         val dialog = builder.create()
         dialog.show()
     }
-
 
 }

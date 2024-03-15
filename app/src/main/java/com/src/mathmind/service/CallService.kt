@@ -1,5 +1,6 @@
 package com.src.mathmind.service
 
+import android.util.Log
 import com.src.mathmind.models.Password
 import com.src.mathmind.models.ScoreBoardModel
 import com.src.mathmind.models.UserModel
@@ -79,22 +80,22 @@ class CallService{
         })
     }
 
-    fun savePassword(password: Password, callback: (String?) -> Unit) {
+    fun getUser(userName: String, callback: (UserModel?) -> Unit) {
 
-        val call = mathMindService.savePassword(password)
-        call.enqueue(object : Callback<String> {
-            override fun onResponse(call: Call<String>, response: Response<String>) {
+        val call = mathMindService.getUser(userName)
+        call.enqueue(object : Callback<UserModel> {
+            override fun onResponse(call: Call<UserModel>, response: Response<UserModel>) {
                 if (response.isSuccessful) {
-                    println("call succeeded: response ${response.body()}")
+                    Log.d(LogTag.GET_USER,"call succeeded: response ${response.body()}")
                     callback(response.body())
                 } else {
-                    println("Unsuccessful response ${response.message()}")
+                    Log.e(LogTag.GET_USER,"Unsuccessful response ${response.message()}")
                     callback(null)
                 }
             }
 
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                println("Failure ${t.message}")
+            override fun onFailure(call: Call<UserModel>, t: Throwable) {
+                Log.e(LogTag.GET_USER, t.printStackTrace().toString())
                 callback(null)
             }
         })

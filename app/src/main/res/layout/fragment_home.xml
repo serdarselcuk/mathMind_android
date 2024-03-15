@@ -11,7 +11,7 @@
         android:id="@+id/guesser_button"
         android:layout_width="380dp"
         android:layout_height="300dp"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="44dp"
         android:src="@drawable/ic_launcher_background"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +27,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/guesser_button"
-        app:layout_constraintVertical_bias="0.064" />
+        />
 
     <TextView
         android:id="@+id/header_guess"
@@ -42,7 +42,7 @@
     <TextView
         android:id="@+id/subtitle_guess"
         android:layout_width="350dp"
-        android:layout_height="75dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:fontFamily="sans-serif-light"
         android:text="@string/guess_subText"
@@ -62,12 +62,12 @@
 
     <TextView
         android:id="@+id/subtitle_feedbacker"
-        android:text="@string/feedBacker_subText"
         android:layout_width="350dp"
-        android:layout_height="75dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:fontFamily="sans-serif-light"
+        android:text="@string/feedBacker_subText"
         android:textStyle="italic"
-        app:layout_constraintStart_toStartOf="@+id/header_guess"
-        app:layout_constraintTop_toBottomOf="@+id/header_guess" />
+        app:layout_constraintStart_toStartOf="@+id/header_feedbacker"
+        app:layout_constraintTop_toBottomOf="@+id/header_feedbacker" />
 </androidx.constraintlayout.widget.ConstraintLayout>

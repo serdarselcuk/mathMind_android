@@ -22,6 +22,7 @@ object RetrofitClient {
         .newBuilder()
         .addInterceptor(RequestInterceptor)
         .build()
+
     fun getClient(): Retrofit =
         Retrofit.Builder()
             .client(okHttpClient)
@@ -49,7 +50,7 @@ interface MathMindService {
     @POST("/user/save")
     fun saveUser(@Body user: UserModel):Call<String>
 
-    @POST("auth/save")
-    fun savePassword(@Body password:Password):Call<String>
+    @GET("/user")
+    fun getUser(@Query("param_1") param_1: String):Call<UserModel>
 
 }

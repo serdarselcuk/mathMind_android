@@ -1,23 +1,38 @@
 package com.src.mathmind.ui.login
 
+import com.src.mathmind.models.UserModel
+import com.src.mathmind.service.CallService
+import com.src.mathmind.utils.PasswordHasher
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
+
 class LoginActivity {
 
-
-    fun validateUser(name:String, password:String):String{
-        var authToken:String= getAuthToken(name)
-//      TODO() implement throwing error when validation fails
-        return if(true) "userName" else ""
-
+    suspend fun getValidatedUser(userName: String, password: String): UserModel? {
+        val user: UserModel? = LoginActivity().getUserValidated(userName)
+        return if (user != null && LoginActivity()
+                .validatePassword(user.password, password, user.hashCode)) {
+            user
+        } else {
+            null
+        }
+    }
+    suspend fun getUserValidated(username: String): UserModel? {
+        return suspendCoroutine { continuation ->
+            CallService().getUser(username) { user ->
+                if (user != null) {
+                    println("${user.firstName} found")
+                    continuation.resume(user)
+                } else {
+                    continuation.resume(null)
+                }
+            }
+        }
     }
 
-    private fun getAuthToken(username: String): String {
-//        TODO() = implement service connection to get user token
-        return "token"
+    fun validatePassword(cryptPass: String, password: String, hash: String): Boolean {
+        return cryptPass == PasswordHasher.hashPassword(password, hash)
     }
 
-    private fun decryptAutToken(name:String, password:String): Boolean {
-//        TODO() = implement token resolution and return user name
-        return true
-    }
 
 }
