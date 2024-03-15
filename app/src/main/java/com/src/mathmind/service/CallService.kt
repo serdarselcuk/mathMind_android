@@ -8,21 +8,21 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class CallService{
+class CallService {
     val retrofitData = RetrofitClient.getClient()
     val mathMindService: MathMindService = retrofitData.create(MathMindService::class.java)
 
     fun calling() {
 
-       val call = mathMindService.getScore()
+        val call = mathMindService.getScore()
         call.enqueue(object : Callback<ScoreBoardModel> {
             override fun onResponse(
                 call: Call<ScoreBoardModel>,
                 response: Response<ScoreBoardModel>
             ) {
-                if(!response.isSuccessful){
+                if (!response.isSuccessful) {
                     println(response.message())
-                }else{
+                } else {
                     println(response.message())
                 }
             }
@@ -80,26 +80,52 @@ class CallService{
         })
     }
 
-    fun getUser(userName: String, callback: (UserModel?) -> Unit) {
+//    fun getUser(userName: String, callback: (UserModel?) -> Unit) {
+//
+//        val call = mathMindService.getUser(userName)
+//        call.enqueue(object : Callback<UserModel> {
+//            override fun onResponse(call: Call<UserModel>, response: Response<UserModel>) {
+//                if (response.isSuccessful) {
+//                    Log.d(LogTag.GET_USER,"call succeeded: response ${response.body()}")
+//                    callback(response.body())
+//                } else {
+//                    Log.e(LogTag.GET_USER,"Unsuccessful response ${response.message()}")
+//                    callback(null)
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<UserModel>, t: Throwable) {
+//                Log.e(LogTag.GET_USER, t.printStackTrace().toString())
+//                callback(null)
+//            }
+//        })
+//  }
 
+    fun getUser(userName: String, callback: (ServiceResponse<UserModel>) -> Unit) {
         val call = mathMindService.getUser(userName)
-        call.enqueue(object : Callback<UserModel> {
-            override fun onResponse(call: Call<UserModel>, response: Response<UserModel>) {
+        call.enqueue(object : Callback<ServiceResponse<UserModel>> {
+            override fun onResponse(call: Call<ServiceResponse<UserModel>>, response: Response<ServiceResponse<UserModel>>) {
                 if (response.isSuccessful) {
-                    Log.d(LogTag.GET_USER,"call succeeded: response ${response.body()}")
-                    callback(response.body())
+                    val serviceResponse = response.body()
+                    if (serviceResponse != null && serviceResponse.isSuccess) {
+                        callback(serviceResponse)
+                    } else {
+                        Log.e(LogTag.GET_USER, "Unsuccessful response: ${serviceResponse?.errorMessage}")
+                        callback(ServiceResponse("Error occurred"))
+                    }
                 } else {
-                    Log.e(LogTag.GET_USER,"Unsuccessful response ${response.message()}")
-                    callback(null)
+                    Log.e(LogTag.GET_USER, "Unsuccessful response ${response.message()}")
+                    callback(ServiceResponse("Error occurred"))
                 }
             }
 
-            override fun onFailure(call: Call<UserModel>, t: Throwable) {
+            override fun onFailure(call: Call<ServiceResponse<UserModel>>, t: Throwable) {
                 Log.e(LogTag.GET_USER, t.printStackTrace().toString())
-                callback(null)
+                callback(ServiceResponse("Error occurred"))
             }
         })
     }
+
 
 
 }

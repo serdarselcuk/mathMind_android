@@ -51,6 +51,6 @@ interface MathMindService {
     fun saveUser(@Body user: UserModel):Call<String>
 
     @GET("/user")
-    fun getUser(@Query("param_1") param_1: String):Call<UserModel>
+    fun getUser(@Query("param_1") param_1: String):Call<ServiceResponse<UserModel>>
 
 }

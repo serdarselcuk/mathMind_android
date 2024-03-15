@@ -33,23 +33,19 @@ class LoginViewModel : ViewModel() {
     }
 
     suspend fun getValidatedUser(userName: String, password: String): UserModel? {
-        val user: UserModel? = LoginActivity().getUserValidated(userName)
-        return if (user != null && LoginActivity()
-                .validatePassword(user.password, password, user.hashCode)) {
+        val user: UserModel? =getUserValidated(userName)
+        return if (user != null && validatePassword(user.password, password, user.hashCode)) {
             user
         } else {
             null
         }
     }
+
     suspend fun getUserValidated(username: String): UserModel? {
         return suspendCoroutine { continuation ->
-            CallService().getUser(username) { user ->
-                if (user != null) {
-                    println("${user.firstName} found")
-                    continuation.resume(user)
-                } else {
-                    continuation.resume(null)
-                }
+            CallService().getUser(username) { serviceResponse ->
+                println("${serviceResponse.data?.firstName} found")
+                continuation.resume(serviceResponse.data)
             }
         }
     }
