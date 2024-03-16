@@ -9,13 +9,13 @@
     <EditText
         android:id="@+id/guessing_number_1"
         android:layout_width="50dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginStart="40dp"
         android:layout_marginTop="50dp"
         android:ems="10"
-        android:nextFocusRight="@id/guessing_number_2"
-        android:maxLength="1"
         android:inputType="number"
+        android:maxLength="1"
+        android:nextFocusRight="@+id/guessing_number_2"
         android:textAlignment="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,11 +23,11 @@
     <EditText
         android:id="@+id/guessing_number_2"
         android:layout_width="50dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="50dp"
         android:ems="10"
-        android:nextFocusRight="@id/guessing_number_3"
+        android:nextFocusRight="@+id/guessing_number_3"
         android:maxLength="1"
         android:inputType="number"
         android:textAlignment="center"
@@ -37,11 +37,11 @@
     <EditText
         android:id="@+id/guessing_number_3"
         android:layout_width="50dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="50dp"
         android:ems="10"
-        android:nextFocusRight="@id/guessing_number_4"
+        android:nextFocusRight="@+id/guessing_number_4"
         android:maxLength="1"
         android:inputType="number"
         android:textAlignment="center"
@@ -51,26 +51,27 @@
     <EditText
         android:id="@+id/guessing_number_4"
         android:layout_width="50dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="50dp"
         android:ems="10"
-        android:nextFocusRight="@id/guessing_button"
+        android:nextFocusRight="@+id/guessing_button"
         android:maxLength="1"
         android:inputType="number"
         android:textAlignment="center"
         app:layout_constraintStart_toEndOf="@+id/guessing_number_3"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <TextView
         android:id="@+id/guesture_history_header"
-        android:layout_width="339dp"
-        android:layout_height="33dp"
-        android:layout_marginStart="36dp"
+        android:layout_width="@dimen/header_1_width"
+        android:layout_height="@dimen/header_1_height"
+        android:layout_marginStart="@dimen/page_common_start_margin"
         android:layout_marginTop="20dp"
         android:text="@string/guessed_numbers_list_header"
         android:textAlignment="center"
-        android:textSize="20sp"
+        android:textSize="@dimen/textHeader_2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/guessing_number_3" />
 
@@ -86,8 +87,8 @@
 
     <ListView
         android:id="@+id/guesture_history_list"
-        android:layout_width="349dp"
-        android:layout_height="553dp"
+        android:layout_width="350dp"
+        android:layout_height="550dp"
         android:divider="@null"
         android:fastScrollEnabled="true"
         android:scrollbarStyle="insideInset"

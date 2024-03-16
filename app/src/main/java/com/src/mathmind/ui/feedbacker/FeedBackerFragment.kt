@@ -24,15 +24,16 @@ class FeedBackerFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View {
         val feedBackerViewModel =
-                ViewModelProvider(this).get(FeedBackerViewModel::class.java)
+            ViewModelProvider(this)[FeedBackerViewModel::class.java]
 
         _binding = FragmentFeedbackerBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textFeedbaker
-        feedBackerViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
+//        val textView: TextView = binding.textFeedbaker
+//        feedBackerViewModel.text.observe(viewLifecycleOwner) {
+//            textView.text = it
+//        }
+
         return root
     }
 

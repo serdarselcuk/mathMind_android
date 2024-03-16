@@ -1,22 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.feedbacker.FeedBackerFragment">
 
+
     <TextView
-        android:id="@+id/text_feedbaker"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:id="@+id/feedbacker_number_view"
+        android:layout_width="250dp"
+        android:layout_height="@dimen/feedbacker_button_height"
+        android:layout_marginTop="@dimen/feedbacker_marginTop"
+        android:text=""
         android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/minus_count"
+        app:layout_constraintStart_toEndOf="@+id/plus_count"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/plus_count"
+        android:layout_width="50dp"
+        android:layout_height="@dimen/feedbacker_button_height"
+        android:layout_marginStart="@dimen/page_common_start_margin"
+        android:layout_marginTop="@dimen/feedbacker_marginTop"
+        android:text="@string/plus_sign"
+        android:textSize="30sp"
+        android:textAlignment="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/minus_count"
+        android:layout_width="50dp"
+        android:layout_height="@dimen/feedbacker_button_height"
+        android:layout_marginTop="@dimen/feedbacker_marginTop"
+        android:layout_marginEnd="16dp"
+        android:textSize="30sp"
+        android:textAlignment="center"
+        android:text="@string/minus_sign"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/plus_button"
+        android:layout_width="@dimen/feedbacker_button_width"
+        android:layout_height="@dimen/feedbacker_button_height"
+        android:layout_marginStart="@dimen/page_common_start_margin"
+        android:layout_marginTop="@dimen/feedbacker_marginTop"
+        android:textSize="30sp"
+        android:textAlignment="center"
+        android:text="@string/plus_sign"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/feedback_history_list" />
+
+    <Button
+        android:id="@+id/minus_button"
+        android:layout_width="@dimen/feedbacker_button_width"
+        android:layout_height="@dimen/feedbacker_button_height"
+        android:layout_marginTop="@dimen/feedbacker_marginTop"
+        android:layout_marginEnd="16dp"
+        android:text="@string/minus_sign"
+        android:textSize="30sp"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/feedback_history_list" />
+
+    <Button
+        android:id="@+id/done_button"
+        android:layout_width="75dp"
+        android:layout_height="@dimen/feedbacker_button_height"
+        android:layout_marginTop="@dimen/feedbacker_marginTop"
+        android:text="@string/done"
+        android:textSize="14sp"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@id/minus_button"
+        app:layout_constraintHorizontal_bias="0.50"
+        app:layout_constraintStart_toEndOf="@id/plus_button"
+        app:layout_constraintTop_toBottomOf="@+id/feedback_history_list" />
+
+    <TextView
+        android:id="@+id/feedback_history_header"
+        android:layout_width="@dimen/header_1_width"
+        android:layout_height="@dimen/header_1_height"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="@dimen/page_common_start_margin"
+        android:text="@string/feedback_numbers_list_header"
+        android:textAlignment="center"
+        android:textSize="@dimen/textHeader_2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/feedbacker_number_view" />
+
+    <ListView
+        android:id= "@+id/feedback_history_list"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_marginHorizontal="@dimen/page_common_start_margin"
+        android:layout_marginStart="@dimen/page_common_start_margin"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/feedback_history_header" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
