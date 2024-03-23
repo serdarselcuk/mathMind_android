@@ -222,7 +222,6 @@ class FeedBackerFragment : Fragment() {
     }
 
     private fun endGame() {
-        feedBackerViewModel.finalScore()
         showDialog(
             getString(R.string.game_end),
             getString(R.string.you_win),
