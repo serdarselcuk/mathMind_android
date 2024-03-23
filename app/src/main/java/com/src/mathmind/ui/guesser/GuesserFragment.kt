@@ -19,8 +19,8 @@ import androidx.navigation.findNavController
 import com.src.mathmind.R
 import com.src.mathmind.databinding.FragmentGuesserBinding
 import com.src.mathmind.models.GuessModel
-import com.src.mathmind.models.GuessViewModel
 import com.src.mathmind.utils.RandomGenerator
+import com.src.mathmind.utils.Utility
 import com.src.mathmind.utils.Utility.Companion.arrayToNum
 import com.src.mathmind.utils.Utility.Companion.highlightElement
 import kotlinx.coroutines.launch
@@ -88,7 +88,7 @@ class GuesserFragment : Fragment() {
                     0,//correctly placed number
                     0 // numbers on wrong place
                 )
-                evaluateNumber(data) // decide about feedback
+                Utility.evaluateNumber(numberKept, data) // decide about feedback
                 if (guessed_number_list.contains(data)) {
                     lifecycleScope.launch {
                         highLightListFromHistory(data, R.color.red_highlight, true)
@@ -263,31 +263,6 @@ class GuesserFragment : Fragment() {
         }
         println(" guessed_number is ${guessed_number.contentToString()}")
         return guessed_number
-    }
-
-    private fun evaluateNumber(data: GuessModel) {
-
-        if (data.guessedNumber == numberKept) {
-            data.placedNumber = 4
-            return
-        } else {
-            val keptNumArray =
-                numberKept.toString().toCharArray().map { it.toString().toInt() }.toIntArray()
-
-            var tempNumber = data.guessedNumber
-            var divisor = 1000
-            var index = 0
-            while (divisor > 0) {
-                val digit = tempNumber / divisor
-                if (keptNumArray[index++] == digit) {
-                    data.placedNumber++
-                } else if (keptNumArray.contains(digit)) {
-                    data.notPlacedNumber++
-                }
-                tempNumber %= divisor
-                divisor /= 10
-            }
-        }
     }
 
     private fun endGame() {

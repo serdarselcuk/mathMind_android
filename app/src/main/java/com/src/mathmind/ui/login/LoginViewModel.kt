@@ -1,12 +1,11 @@
-package com.src.mathmind.models
+package com.src.mathmind.ui.login
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.src.mathmind.models.UserModel
 import com.src.mathmind.service.CallService
-import com.src.mathmind.ui.login.LoginActivity
-import com.src.mathmind.ui.login.LoginViewState
 import com.src.mathmind.utils.PasswordHasher
 import kotlinx.coroutines.launch
 import kotlin.coroutines.resume
@@ -32,7 +31,7 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    suspend fun getValidatedUser(userName: String, password: String): UserModel? {
+    private suspend fun getValidatedUser(userName: String, password: String): UserModel? {
         val user: UserModel? =getUserValidated(userName)
         return if (user != null && validatePassword(user.password, password, user.hashCode)) {
             user
@@ -41,7 +40,7 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    suspend fun getUserValidated(username: String): UserModel? {
+    private suspend fun getUserValidated(username: String): UserModel? {
         return suspendCoroutine { continuation ->
             CallService().getUser(username) { serviceResponse ->
                 println("${serviceResponse.data?.firstName} found")
@@ -50,7 +49,7 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    fun validatePassword(cryptPass: String, password: String, hash: String): Boolean {
+    private fun validatePassword(cryptPass: String, password: String, hash: String): Boolean {
         return cryptPass == PasswordHasher.hashPassword(password, hash)
     }
 }

@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
 import androidx.navigation.findNavController
 import com.src.mathmind.R
+import com.src.mathmind.models.GuessModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -21,6 +22,21 @@ class Utility {
     companion object {
         fun arrayToNum(array: IntArray): Int {
             return "${array[0]}${array[1]}${array[2]}${array[3]}".toInt()
+        }
+
+        fun numToArray(number: Int): MutableList<Int> {
+            val digits = mutableListOf<Int>()
+            var num = number
+
+            // Extract digits until the number becomes zero
+            while (num > 0) {
+                // Extract the last digit and add it to the list
+                val digit = num % 10
+                digits.add(0, digit) // Add the digit at the beginning of the list
+                num /= 10 // Remove the last digit
+            }
+
+            return digits
         }
 
         suspend fun highlightElement(
@@ -100,6 +116,37 @@ class Utility {
                 DateTimeFormatter.ofPattern(pattern)
             return LocalDate.now().format(formatter)
 
+        }
+
+        fun evaluateNumber(numberKept: Int, data: GuessModel):MutableList<Int> {
+
+            if (data.guessedNumber == numberKept) {
+                data.placedNumber = 4
+                return mutableListOf( data.placedNumber, data.notPlacedNumber)
+            } else {
+                val keptNumArray = numToArray(numberKept)
+                val guessedNum = numToArray(data.guessedNumber)
+                val feedBack = generateFeedBack(keptNumArray,guessedNum)
+                data.placedNumber = feedBack[0]
+                data.notPlacedNumber = feedBack[1]
+            }
+
+            return mutableListOf( data.placedNumber, data.notPlacedNumber)
+        }
+
+        fun generateFeedBack(keptNumArray:List<Int>, numToCompare:List<Int>): Array<Int>{
+            var placedNumber = 0
+            var notPlacedNumber = 0
+
+            numToCompare.forEachIndexed{index,digit->
+                if (keptNumArray[index] == digit) {
+                    placedNumber++
+                } else if (keptNumArray.contains(digit)) {
+                    notPlacedNumber++
+                }
+            }
+
+            return arrayOf(placedNumber, notPlacedNumber)
         }
     }
 }

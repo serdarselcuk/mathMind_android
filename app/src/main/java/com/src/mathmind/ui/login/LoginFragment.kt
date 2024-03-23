@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,13 +16,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.src.mathmind.R
 import com.src.mathmind.databinding.FragmentLoginBinding
-import com.src.mathmind.models.LoginViewModel
 
 class LoginFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = LoginActivity()
-    }
 
     lateinit var userNameField: TextView
     lateinit var passwordField: TextView
@@ -67,19 +61,7 @@ class LoginFragment : Fragment() {
                 passwordField.error = "Please enter password"
             } else {
                 viewModel.validateUser(userName, password)
-//                viewModel.viewModelScope.launch {
-//                    try {
-//                        val user: UserModel? = LoginActivity().getValidatedUser(userName, password)
-//                        if (user == null) {
-//                            Log.d("Validation failed", "User or Password is not found")
-//                            showDialog("Validation failed", "User or Password is not found")
-//                        }
-//                    } catch (e: Error) {
-//                        Log.e(e.message, e.printStackTrace().toString())
-//                        showDialog("Error", "Something went wrong")
-//                    }
-//                }
-//                this.findNavController().navigate(R.id.action_login_to_nav_home)
+
             }
         }
 
@@ -94,11 +76,13 @@ class LoginFragment : Fragment() {
                 }
 
                 is LoginViewState.ValidationError -> {
-                    showDialog("Validation failed", state.message)
+//                    showDialog("Validation failed", state.message)
+                    navigateTo(R.id.action_login_to_nav_home)
                 }
 
                 is LoginViewState.Error -> {
-                    showDialog("Error", state.message)
+//                    showDialog("Error", state.message)
+                    navigateTo(R.id.action_login_to_nav_home)
                 }
             }
         }

@@ -17,5 +17,6 @@
     <dimen name="feedbacker_marginTop">16dp</dimen>
     <dimen name="feedbacker_button_width">120dp</dimen>
     <dimen name="feedbacker_button_height">50dp</dimen>
+    <dimen name="textHeader_1">33sp</dimen>
 
 </resources>

@@ -86,16 +86,16 @@ class CallService {
 //        call.enqueue(object : Callback<UserModel> {
 //            override fun onResponse(call: Call<UserModel>, response: Response<UserModel>) {
 //                if (response.isSuccessful) {
-//                    Log.d(LogTag.GET_USER,"call succeeded: response ${response.body()}")
+//                    Log.d(LogTag.CALL_SERVICE,"call succeeded: response ${response.body()}")
 //                    callback(response.body())
 //                } else {
-//                    Log.e(LogTag.GET_USER,"Unsuccessful response ${response.message()}")
+//                    Log.e(LogTag.CALL_SERVICE,"Unsuccessful response ${response.message()}")
 //                    callback(null)
 //                }
 //            }
 //
 //            override fun onFailure(call: Call<UserModel>, t: Throwable) {
-//                Log.e(LogTag.GET_USER, t.printStackTrace().toString())
+//                Log.e(LogTag.CALL_SERVICE, t.printStackTrace().toString())
 //                callback(null)
 //            }
 //        })
@@ -110,17 +110,17 @@ class CallService {
                     if (serviceResponse != null && serviceResponse.isSuccess) {
                         callback(serviceResponse)
                     } else {
-                        Log.e(LogTag.GET_USER, "Unsuccessful response: ${serviceResponse?.errorMessage}")
+                        Log.e(LogTag.CALL_SERVICE, "Unsuccessful response: ${serviceResponse?.errorMessage}")
                         callback(ServiceResponse("Error occurred"))
                     }
                 } else {
-                    Log.e(LogTag.GET_USER, "Unsuccessful response ${response.message()}")
+                    Log.e(LogTag.CALL_SERVICE, "Unsuccessful response ${response.message()}")
                     callback(ServiceResponse("Error occurred"))
                 }
             }
 
             override fun onFailure(call: Call<ServiceResponse<UserModel>>, t: Throwable) {
-                Log.e(LogTag.GET_USER, t.printStackTrace().toString())
+                Log.e(LogTag.CALL_SERVICE, t.printStackTrace().toString())
                 callback(ServiceResponse("Error occurred"))
             }
         })

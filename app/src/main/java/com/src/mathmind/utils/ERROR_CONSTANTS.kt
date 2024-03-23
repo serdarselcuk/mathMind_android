@@ -2,6 +2,7 @@ package com.src.mathmind.utils
 
 class ERROR_CONSTANTS {
     companion object{
+        const val GUESS_MODEL_NOT_FOUND = "guess model not found"
         const val REQUIRED = "Required field"
         const val USER_EXISTS = "User exists. Please try another name"
         const val SERVICE_ERROR = "Service Error"

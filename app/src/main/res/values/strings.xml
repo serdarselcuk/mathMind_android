@@ -46,5 +46,10 @@
     <string name="fragment_login">Login</string>
     <string name="feedback_numbers_list_header">FeedBack history</string>
     <string name="done">DONE</string>
+    <string name="wait_for_number_to_evaluate">Wait for number to evaluate</string>
+    <string name="ready">READY!</string>
+    <string name="wait">WAIT</string>
+    <string name="get_ready">Get Ready!</string>
+    <string name="hold_a_number">Hold a number. I will try to guess and wait for your feedback. You can provide it in \"+\" for each digits in correct order and in \"-\" for each in wrong place</string>
 
 </resources>
