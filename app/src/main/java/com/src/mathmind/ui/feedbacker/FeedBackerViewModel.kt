@@ -19,8 +19,6 @@ class FeedBackerViewModel : ViewModel() {
         private val possibleNumbers = mutableListOf<Int>()
     }
 
-    var score: Int = 0
-
     private val _minus = MutableLiveData<Int>().apply { value = 0 }
     val minus: LiveData<Int> = _minus
 

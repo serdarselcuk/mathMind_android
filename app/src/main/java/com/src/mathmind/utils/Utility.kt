@@ -1,12 +1,9 @@
 package com.src.mathmind.utils
 
-import android.app.AlertDialog
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getString
-import androidx.navigation.findNavController
 import com.src.mathmind.R
 import com.src.mathmind.models.GuessModel
 import kotlinx.coroutines.Dispatchers

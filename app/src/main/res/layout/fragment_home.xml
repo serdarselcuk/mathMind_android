@@ -13,7 +13,8 @@
         android:layout_height="300dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="44dp"
-        android:src="@drawable/ic_launcher_background"
+        android:src="@drawable/math_board_1"
+        android:alpha="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -23,7 +24,8 @@
         android:layout_height="300dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
-        android:src="@drawable/ic_launcher_background"
+        android:src="@drawable/math_board_2"
+        android:alpha="0.5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/guesser_button"
@@ -32,10 +34,13 @@
     <TextView
         android:id="@+id/header_guess"
         android:text="@string/guess_header"
+        android:textSize="50sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
+        android:textColor="#FFFFFFFF"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/guesser_button"
         app:layout_constraintTop_toTopOf="@+id/guesser_button" />
 
@@ -46,15 +51,19 @@
         android:layout_marginTop="15dp"
         android:fontFamily="sans-serif-light"
         android:text="@string/guess_subText"
-        android:textStyle="italic"
+        android:textColor="#FFFFFFFF"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/header_guess"
         app:layout_constraintTop_toBottomOf="@+id/header_guess" />
 
     <TextView
         android:id="@+id/header_feedbacker"
+        android:textSize="50sp"
         android:text="@string/feedBacker_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="#FFFFFFFF"
+        android:textStyle="bold"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="@+id/feedbackerButton"
@@ -66,8 +75,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:fontFamily="sans-serif-light"
+        android:textColor="#FFFFFFFF"
+        android:textStyle="bold"
         android:text="@string/feedBacker_subText"
-        android:textStyle="italic"
         app:layout_constraintStart_toStartOf="@+id/header_feedbacker"
         app:layout_constraintTop_toBottomOf="@+id/header_feedbacker" />
 </androidx.constraintlayout.widget.ConstraintLayout>

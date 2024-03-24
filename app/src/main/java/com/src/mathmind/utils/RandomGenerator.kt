@@ -15,7 +15,7 @@ class RandomGenerator(
         array = ByteArray(16)
         secureRandom.nextBytes(array)
         val salt = array
-        return Base64.getEncoder().encodeToString(salt);
+        return Base64.getEncoder().encodeToString(salt)
     }
 
     fun generateRandomUniqueDigits(
