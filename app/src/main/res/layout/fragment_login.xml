@@ -40,8 +40,7 @@
         android:hint="@string/enter_password"
         android:inputType="textPassword"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputUserName"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/textInputUserName" />
 
     <Button
         android:id="@+id/buttonLogin"
@@ -49,11 +48,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
         android:layout_marginTop="28dp"
+        android:backgroundTint="@color/coolGrey"
         android:text="@string/log_in_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword"
-        android:backgroundTint="@color/coolGrey"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
 
     <Button
         android:id="@+id/buttonSignOn"
@@ -61,8 +59,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
         android:layout_marginEnd="48dp"
+        android:backgroundTint="@color/coolGrey"
         android:text="@string/sing_on_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword"
-        android:backgroundTint="@color/coolGrey"/>
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
+
+    <include
+        android:id="@+id/progressBar"
+        layout="@layout/progress_bar"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -23,6 +23,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import androidx.navigation.findNavController
+import com.src.mathmind.databinding.ProgressBarBinding
 import com.src.mathmind.utils.PasswordHasher
 import com.src.mathmind.utils.RandomGenerator
 import com.src.mathmind.utils.Utility.Companion.getCurrentDate
@@ -45,6 +46,7 @@ class SignOnFragment : Fragment() {
     private lateinit var lastName:String
     private lateinit var password: String
     private var confirmPassword: Boolean = false
+    private lateinit var progressBar: ProgressBarBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,6 +55,7 @@ class SignOnFragment : Fragment() {
     ): View {
         _binding = FragmentSignOnBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        progressBar = binding.progressBar
         errorTextInput = binding.errorView
         emailInput = binding.emailInput
         userNameInput = binding.userNameInput
@@ -105,6 +108,7 @@ class SignOnFragment : Fragment() {
 //                                .add(android.R.id.content, loadingFragment)
 //                                .commit()
                             try {
+                                progressBar.progressBar.visibility = View.VISIBLE
                                 val hashKey = RandomGenerator().generateSalt()
                                 val hashed_password = PasswordHasher
                                     .hashPassword(password,hashKey)?: throw AuthenticatorException(ERROR_CONSTANTS.SERVICE_ERROR)
@@ -130,6 +134,8 @@ class SignOnFragment : Fragment() {
                                     getString(R.string.user_failed),
                                     getString(R.string.please_try_later),
                                     R.id.action_signOn_to_nav_login)
+                            }finally {
+                                progressBar.progressBar.visibility = View.GONE
                             }
                         } else {
                             errorTextInput.visibility = View.VISIBLE
@@ -154,26 +160,6 @@ class SignOnFragment : Fragment() {
                 }
         }
     }
-
-//    private suspend fun savePassword(userId: Int):String? {
-//        val hashKey = RandomGenerator().generateSalt()
-//        val hashed = PasswordHasher
-//            .hashPassword(password,hashKey)
-//        return if(hashed is String) {
-//            suspendCoroutine { continuation ->
-//                CallService().savePassword(
-//                    Password(
-//                        hashed,
-//                        hashKey,
-//                        userId
-//                    )
-//                ) { callback ->
-//                    println(callback.toString())
-//                    continuation.resume(callback)
-//                }
-//            }
-//        } else throw Error("hashing error")
-//    }
 
     private fun addConfirmPasswordFocusListener(confirmPasswordInput: EditText) {
 
@@ -298,7 +284,6 @@ class SignOnFragment : Fragment() {
             }
         }
     }
-
 
     private fun checkAllEmptyInputs() : MutableList<String>{
 

@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.src.mathmind.R
 import com.src.mathmind.databinding.FragmentFeedbackerBinding
+import com.src.mathmind.databinding.ProgressBarBinding
 import com.src.mathmind.service.LogTag
 import com.src.mathmind.ui.guesser.GuestureHistoryAdapter
 import com.src.mathmind.utils.RandomGenerator
@@ -36,6 +37,7 @@ class FeedBackerFragment : Fragment() {
     private lateinit var doneButton: Button
     private lateinit var feedBackerViewModel: FeedBackerViewModel
     private lateinit var guessHistoryAdapter: GuestureHistoryAdapter
+    private lateinit var progressBar: ProgressBarBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,12 +45,13 @@ class FeedBackerFragment : Fragment() {
         feedBackerViewModel.feedBackStatus.observe(viewLifecycleOwner) { phase ->
             Log.d("FEEDBACKER_OBSERVER", "Status getting Observed: $phase")
             when (phase) {
-                is FeedBackerViewState.NEW -> {
+                FeedBackerViewState.NEW -> {
                     doneButton.text = getString(R.string.ready)
                     doneButton.isActivated = true
                 }
 
-                is FeedBackerViewState.EVALUATING -> {
+                FeedBackerViewState.EVALUATING -> {
+                    progressBar.progressBar.visibility = View.VISIBLE
                     doneButton.text = getString(R.string.wait)
                     guessedNumberTestView.text = "- - - -"
                     doneButton.isActivated = false
@@ -57,15 +60,17 @@ class FeedBackerFragment : Fragment() {
                     guessHistoryAdapter.notifyDataSetChanged()
                 }
 
-                is FeedBackerViewState.WAITING -> {
+                FeedBackerViewState.WAITING -> {
+                    progressBar.progressBar.visibility = View.GONE
                     guessedNumberTestView.text = feedBackerViewModel.guessNum.value.toString()
                     doneButton.text = getString(R.string.done)
                     doneButton.isActivated = true
                 }
 
-                is FeedBackerViewState.END -> {
+                FeedBackerViewState.END -> {
                     endGame()
                 }
+
             }
         }
     }
@@ -81,6 +86,7 @@ class FeedBackerFragment : Fragment() {
 
         _binding = FragmentFeedbackerBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        progressBar = binding.progressBar
 
         plusButton = binding.plusButton
         minusButton = binding.minusButton
@@ -164,7 +170,6 @@ class FeedBackerFragment : Fragment() {
                         }
 
                         is FeedBackerViewState.WAITING -> {
-
                             feedBackerViewModel.updateFeedbackHistory()
                             feedBackerViewModel.setStatus(FeedBackerViewState.EVALUATING)
                             lifecycleScope.launch {

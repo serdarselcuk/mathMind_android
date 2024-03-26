@@ -16,6 +16,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.src.mathmind.R
 import com.src.mathmind.databinding.FragmentLoginBinding
+import com.src.mathmind.databinding.ProgressBarBinding
+
 
 class LoginFragment : Fragment() {
 
@@ -32,20 +34,22 @@ class LoginFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var viewModel: LoginViewModel
-
+    private lateinit var progressBar: ProgressBarBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
 //        val navHostFragment =
 //            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 //        val navController = navHostFragment.navController
         viewModel = ViewModelProvider(this)[LoginViewModel::class.java]
 
+
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        progressBar = binding.progressBar
 
         logInButton = binding.buttonLogin
         signOnButton = binding.buttonSignOn
@@ -60,8 +64,9 @@ class LoginFragment : Fragment() {
             } else if (password.isBlank()) {
                 passwordField.error = "Please enter password"
             } else {
+                progressBar.progressBar.visibility = View.VISIBLE
+                progressBar.overlayView.visibility = View.VISIBLE
                 viewModel.validateUser(userName, password)
-
             }
         }
 
@@ -76,13 +81,13 @@ class LoginFragment : Fragment() {
                 }
 
                 is LoginViewState.ValidationError -> {
-//                    showDialog("Validation failed", state.message)
-                    navigateTo(R.id.action_login_to_nav_home)
+                    progressBar.progressBar.visibility = View.GONE
+                    progressBar.overlayView.visibility = View.GONE
+                    showDialog("Validation failed", state.message)
                 }
 
                 is LoginViewState.Error -> {
-//                    showDialog("Error", state.message)
-                    navigateTo(R.id.action_login_to_nav_home)
+                    showDialog("Error", state.message)
                 }
             }
         }
@@ -100,7 +105,6 @@ class LoginFragment : Fragment() {
 
 
         return root
-//        inflater.inflate(R.layout.fragment_login, container, false)
     }
 
     private fun assignListener(textInput: EditText){

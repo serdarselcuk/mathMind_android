@@ -18,6 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.src.mathmind.R
 import com.src.mathmind.databinding.FragmentGuesserBinding
+import com.src.mathmind.databinding.ProgressBarBinding
 import com.src.mathmind.models.GuessModel
 import com.src.mathmind.utils.RandomGenerator
 import com.src.mathmind.utils.Utility
@@ -35,6 +36,7 @@ class GuesserFragment : Fragment() {
     private lateinit var digit_cell_4: EditText
     private lateinit var guess_button: Button
     private lateinit var guesser_header: TextView
+    private lateinit var progressBar: ProgressBarBinding
     private lateinit var guessNumberCells: Array<EditText>
     private var guessed_number_list: MutableList<GuessModel> = mutableListOf()
     private lateinit var guessed_list_view: ListView
@@ -54,6 +56,7 @@ class GuesserFragment : Fragment() {
 
         _binding = FragmentGuesserBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        progressBar = binding.progressBar
 
         guessed_list_view = binding.guestureHistoryList
         guess_button = binding.guessingButton
@@ -62,6 +65,7 @@ class GuesserFragment : Fragment() {
         digit_cell_3 = binding.guessingNumber3
         digit_cell_4 = binding.guessingNumber4
         guesser_header = binding.guestureHistoryHeader
+
         val guessHistoryAdapter = GuestureHistoryAdapter(requireContext(), guessed_number_list)
         guessed_list_view.adapter = guessHistoryAdapter
 
@@ -78,6 +82,7 @@ class GuesserFragment : Fragment() {
         }
 
         guess_button.setOnClickListener {
+            progressBar.progressBar.visibility = View.VISIBLE
             makeListElementsColorDefault()
             val numberArray = validateCells(guessNumberCells)
 
@@ -89,45 +94,11 @@ class GuesserFragment : Fragment() {
                     0 // numbers on wrong place
                 )
                 Utility.evaluateNumber(numberKept, data) // decide about feedback
+                progressBar.progressBar.visibility = View.GONE
                 if (guessed_number_list.contains(data)) {
-                    lifecycleScope.launch {
-                        highLightListFromHistory(data, R.color.red_highlight, true)
-                    }
-                    lifecycleScope.launch {
-                        highlightElement(
-                            digit_cell_1,
-                            R.color.red_highlight,
-                            requireContext(),
-                            true
-                        )
-                    }
-                    lifecycleScope.launch {
-                        highlightElement(
-                            digit_cell_2,
-                            R.color.red_highlight,
-                            requireContext(),
-                            true
-                        )
-                    }
-                    lifecycleScope.launch {
-                        highlightElement(
-                            digit_cell_3,
-                            R.color.red_highlight,
-                            requireContext(),
-                            true
-                        )
-                    }
-                    lifecycleScope.launch {
-                        highlightElement(
-                            digit_cell_4,
-                            R.color.red_highlight,
-                            requireContext(),
-                            true
-                        )
-                    }
+                    highlightValues(data)
                 } else if (data.placedNumber == 4) {
                     endGame()
-
                 } else {
                     guessed_number_list.add(data)
                     lifecycleScope.launch {
@@ -135,6 +106,9 @@ class GuesserFragment : Fragment() {
                         guessHistoryAdapter.notifyDataSetChanged()
                     }
                 }
+
+            }else{
+                progressBar.progressBar.visibility = View.GONE
             }
 
 
@@ -144,6 +118,44 @@ class GuesserFragment : Fragment() {
 //        }
         }
         return root
+    }
+
+    private fun highlightValues(data:GuessModel) {
+        lifecycleScope.launch {
+            highLightListFromHistory(data, R.color.red_highlight, true)
+        }
+        lifecycleScope.launch {
+            highlightElement(
+                digit_cell_1,
+                R.color.red_highlight,
+                requireContext(),
+                true
+            )
+        }
+        lifecycleScope.launch {
+            highlightElement(
+                digit_cell_2,
+                R.color.red_highlight,
+                requireContext(),
+                true
+            )
+        }
+        lifecycleScope.launch {
+            highlightElement(
+                digit_cell_3,
+                R.color.red_highlight,
+                requireContext(),
+                true
+            )
+        }
+        lifecycleScope.launch {
+            highlightElement(
+                digit_cell_4,
+                R.color.red_highlight,
+                requireContext(),
+                true
+            )
+        }
     }
 
     private fun makeListElementsColorDefault() {

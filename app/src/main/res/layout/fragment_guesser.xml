@@ -97,5 +97,12 @@
         app:layout_constraintHorizontal_bias="0.58"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/guesture_history_header"
-        app:layout_constraintVertical_bias="0.933" />
+        app:layout_constraintVertical_bias="0.933" >
+    </ListView>
+
+    <include
+        layout="@layout/progress_bar"
+        android:id="@+id/progressBar"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
