@@ -13,6 +13,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import com.src.mathmind.service.LogTag
 import com.src.mathmind.utils.ERROR_CONSTANTS
 import org.junit.After
 import org.junit.Before
@@ -56,16 +57,12 @@ class LoginInstrumentedTests : EspressoBase() {
 
     @Test
     fun user_able_to_see_guest_number_history() {
-        Log.d("UI_TEST", "user able to see guest number history")
+        Log.d(LogTag.UI_TEST, "user able to see guest number history")
         // Context of the app under test.
         login()
         landOnGuesser()
         guessNumber("1234")
-
-        val element = withId(R.id.guesture_history_list)
-        validateDisplayedWithText(element, "1234")
-        Log.d("UI_TEST", "testing started")
-
+        validateDisplayedWithText(withId(R.id.guesture_history_list), "1234")
     }
 
     @Test
