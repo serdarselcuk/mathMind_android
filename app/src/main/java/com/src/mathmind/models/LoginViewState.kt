@@ -1,4 +1,4 @@
-package com.src.mathmind.ui.login
+package com.src.mathmind.models
 
 sealed class LoginViewState {
     object ValidationSuccess : LoginViewState()

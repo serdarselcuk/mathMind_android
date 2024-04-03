@@ -2,20 +2,22 @@ package com.src.mathmind
 
 import android.os.Bundle
 import android.view.Menu
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.src.mathmind.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
+import com.src.mathmind.databinding.ActivityMainBinding
+import com.src.mathmind.utils.IdlingTool
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    private var idlingResource: IdlingTool? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +54,11 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_login)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
         return false
+    }
+
+    fun getIdlingTool(): IdlingTool {
+        if(this.idlingResource == null) idlingResource = IdlingTool()
+        return idlingResource as IdlingTool
     }
 
 }

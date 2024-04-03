@@ -24,6 +24,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import androidx.navigation.findNavController
 import com.src.mathmind.databinding.ProgressBarBinding
+import com.src.mathmind.utils.IdlingTool
 import com.src.mathmind.utils.PasswordHasher
 import com.src.mathmind.utils.RandomGenerator
 import com.src.mathmind.utils.Utility.Companion.getCurrentDate
@@ -47,6 +48,7 @@ class SignOnFragment : Fragment() {
     private lateinit var password: String
     private var confirmPassword: Boolean = false
     private lateinit var progressBar: ProgressBarBinding
+    private lateinit var idlingResource: IdlingTool
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -238,7 +240,7 @@ class SignOnFragment : Fragment() {
                 val userNameError: TextView = binding.userNameErrorView
                 val text = (_userName as EditText).text.toString()
                 if (!hasFocus) {
-                    CallService().validateUserName(text) { userExists ->
+                    CallService().validateUserName(text,getIdlingResource()) { userExists ->
                         if (userExists != null) {
                             println("userExists in callback ${userExists}")
                             if (userExists) userNameError.text = ERROR_CONSTANTS.USER_EXISTS
@@ -272,7 +274,8 @@ class SignOnFragment : Fragment() {
                 email,
                 hashedPassword,
                 hash
-            )
+            ),
+            getIdlingResource()
         ) { response ->
             if (response != null) {
                 println("in callback $response")
@@ -358,5 +361,11 @@ class SignOnFragment : Fragment() {
         val dialog = builder.create()
         dialog.show()
     }
+
+    fun getIdlingResource(): IdlingTool {
+        if(this.idlingResource == null) idlingResource = IdlingTool()
+        return idlingResource
+    }
+
 
 }

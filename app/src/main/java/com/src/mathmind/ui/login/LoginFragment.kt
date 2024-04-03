@@ -1,6 +1,7 @@
 package com.src.mathmind.ui.login
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,25 +15,28 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.src.mathmind.MainActivity
 import com.src.mathmind.R
 import com.src.mathmind.databinding.FragmentLoginBinding
 import com.src.mathmind.databinding.ProgressBarBinding
+import com.src.mathmind.models.LoginViewState
+import com.src.mathmind.utils.ERROR_CONSTANTS
 
 
 class LoginFragment : Fragment() {
 
-    lateinit var userNameField: TextView
-    lateinit var passwordField: TextView
-    lateinit var logInButton: Button
-    lateinit var signOnButton: Button
-    lateinit var userName: String
-    lateinit var password: String
+    private lateinit var userNameField: TextView
+    private lateinit var passwordField: TextView
+    private lateinit var logInButton: Button
+    private lateinit var signOnButton: Button
+    private lateinit var userName: String
+    private lateinit var password: String
+    private lateinit var mainActivity: MainActivity
 
 
     private var _binding: FragmentLoginBinding? = null
 
     private val binding get() = _binding!!
-
     private lateinit var viewModel: LoginViewModel
     private lateinit var progressBar: ProgressBarBinding
 
@@ -60,13 +64,13 @@ class LoginFragment : Fragment() {
             userName = userNameField.text.toString()
             password = passwordField.text.toString()
             if (userName.isBlank()) {
-                userNameField.error = "Provide your user name"
+                userNameField.error = ERROR_CONSTANTS.PROVIDE_USER_NAME
             } else if (password.isBlank()) {
-                passwordField.error = "Please enter password"
+                passwordField.error = ERROR_CONSTANTS.PROVIDE_PASSWORD
             } else {
                 progressBar.progressBar.visibility = View.VISIBLE
                 progressBar.overlayView.visibility = View.VISIBLE
-                viewModel.validateUser(userName, password)
+                viewModel.validateUser(userName, password, mainActivity.getIdlingTool())
             }
         }
 
@@ -83,11 +87,11 @@ class LoginFragment : Fragment() {
                 is LoginViewState.ValidationError -> {
                     progressBar.progressBar.visibility = View.GONE
                     progressBar.overlayView.visibility = View.GONE
-                    showDialog("Validation failed", state.message)
+                    showDialog(ERROR_CONSTANTS.VALIDATION_FAILED, state.message)
                 }
 
                 is LoginViewState.Error -> {
-                    showDialog("Error", state.message)
+                    showDialog(ERROR_CONSTANTS.ERROR_HEADER, state.message)
                 }
             }
         }
@@ -105,6 +109,15 @@ class LoginFragment : Fragment() {
 
 
         return root
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is MainActivity) {
+            mainActivity = context
+        } else {
+            throw IllegalStateException("LoginFragment must be attached to MainActivity")
+        }
     }
 
     private fun assignListener(textInput: EditText){
@@ -160,4 +173,12 @@ class LoginFragment : Fragment() {
         onDestroy()
         findNavController().navigate(id)
     }
+
+//    @VisibleForTesting
+//    fun getIdlingResource(): IdlingResource {
+//        if (IdlingTool == null) {
+//            mIdlingResource = SimpleIdlingResource()
+//        }
+//        return mIdlingResource
+//    }
 }

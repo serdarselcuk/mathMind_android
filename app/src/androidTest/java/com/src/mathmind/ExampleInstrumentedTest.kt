@@ -25,7 +25,7 @@ import org.hamcrest.TypeSafeMatcher
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 @RunWith(AndroidJUnit4::class)
-class ExampleInstrumentedTest {
+class ExampleInstrumentedTest : EspressoBase(){
 
     @get:Rule
     var activityRule = ActivityScenarioRule(MainActivity::class.java)
@@ -69,63 +69,8 @@ class ExampleInstrumentedTest {
         ).check(matches(isDisplayed()))
 
     }
-
-    private fun validateDisplayedWithText(onView: Matcher<View?>, text: String): ViewInteraction {
-        return onView(onView)
-            .check(
-                matches(
-                    hasDescendant(
-                        AllOf.allOf(
-                            isDisplayed(),
-                            withText(text)
-                        )
-                    )
-                )
-            )
-
-    }
-
-    private fun guessNumber(number: String) {
-        val digits = number.map { it.toString() }
-        require(digits.size == 4) { "Number must be a 4-digit." }
-
-        val numberIds = arrayOf(
-            R.id.guessing_number_1,
-            R.id.guessing_number_2,
-            R.id.guessing_number_3,
-            R.id.guessing_number_4
-        )
-
-        numberIds.forEachIndexed { index, id ->
-            onView(withId(id)).perform(typeText(digits[index]))
-        }
-
-        onView(withId(R.id.guessing_button))
-            .perform(click())
-    }
-
-    private fun login() {
-        onView(withId(R.id.buttonLogin))
-            .perform(click())
-    }
-
-    private fun landOnGuesser() {
-        onView(withId(R.id.guesser_button))
-            .perform(click())
-    }
 }
 
 
-class IsIntegerInRangeMatcher(private val min: Int, private val max: Int) :
-    TypeSafeMatcher<String>() {
-
-    override fun matchesSafely(item: String?): Boolean {
-        return item?.toIntOrNull() in min..max
-    }
-
-    override fun describeTo(description: Description?) {
-        description?.appendText("an integer between $min and $max")
-    }
-}
 
 

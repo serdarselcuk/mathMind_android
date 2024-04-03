@@ -2,6 +2,11 @@ package com.src.mathmind.utils
 
 class ERROR_CONSTANTS {
     companion object{
+        const val VALIDATION_FAILED = "Validation failed"
+        const val ERROR_HEADER = "Error"
+        const val CREDENTIALS_VALIDATION_FAILURE = "User or Password is not found"
+        const val PROVIDE_USER_NAME = "Provide your user name"
+        const val PROVIDE_PASSWORD = "Provide password"
         const val GUESS_MODEL_NOT_FOUND = "guess model not found"
         const val REQUIRED = "Required field"
         const val USER_EXISTS = "User exists. Please try another name"
