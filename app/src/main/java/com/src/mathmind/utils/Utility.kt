@@ -115,20 +115,23 @@ class Utility {
 
         }
 
+        /*returning an array of
+        * placed number , not_placed number
+        * also updating data
+        * */
         fun evaluateNumber(numberKept: Int, data: GuessModel):MutableList<Int> {
-
-            if (data.guessedNumber == numberKept) {
-                data.placedNumber = 4
-                return mutableListOf( data.placedNumber, data.notPlacedNumber)
+            val feedBack: Array<Int> = if (data.guessedNumber == numberKept) {
+                arrayOf(4,0)
             } else {
-                val keptNumArray = numToArray(numberKept)
-                val guessedNum = numToArray(data.guessedNumber)
-                val feedBack = generateFeedBack(keptNumArray,guessedNum)
-                data.placedNumber = feedBack[0]
-                data.notPlacedNumber = feedBack[1]
+                generateFeedBack(
+                    numToArray(numberKept),
+                    numToArray(data.guessedNumber)
+                )
             }
+            data.placedNumber = feedBack[0]
+            data.notPlacedNumber = feedBack[1]
 
-            return mutableListOf( data.placedNumber, data.notPlacedNumber)
+            return mutableListOf( feedBack[0], feedBack[1] )
         }
 
         fun generateFeedBack(keptNumArray:List<Int>, numToCompare:List<Int>): Array<Int>{

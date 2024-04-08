@@ -1,6 +1,7 @@
 package com.src.mathmind.ui.feedbacker
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import com.src.mathmind.MainActivity
 import com.src.mathmind.R
 import com.src.mathmind.databinding.FragmentFeedbackerBinding
 import com.src.mathmind.databinding.ProgressBarBinding
@@ -38,6 +40,16 @@ class FeedBackerFragment : Fragment() {
     private lateinit var feedBackerViewModel: FeedBackerViewModel
     private lateinit var guessHistoryAdapter: GuestureHistoryAdapter
     private lateinit var progressBar: ProgressBarBinding
+    private lateinit var mainActivity: MainActivity
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is MainActivity) {
+            mainActivity = context
+        } else {
+            throw IllegalStateException("FeedbackerFragment must be attached to MainActivity")
+        }
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -86,8 +98,8 @@ class FeedBackerFragment : Fragment() {
 
         _binding = FragmentFeedbackerBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        mainActivity.setShowSignOutVisible(false)
         progressBar = binding.progressBar
-
         plusButton = binding.plusButton
         minusButton = binding.minusButton
         plusNumberTestView = binding.plusCount

@@ -2,33 +2,8 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="ExampleInstrumentedTest">
-        <State />
-      </entry>
       <entry key="app">
         <State />
-      </entry>
-      <entry key="user_able_to_see_guessed_number_on_feedbacker()">
-        <State />
-      </entry>
-      <entry key="user_able_to_see_guest_number_history()">
-        <State />
-      </entry>
-      <entry key="user_able_to_see_guest_number_history() (1)">
-        <State>
-          <targetSelectedWithDropDown>
-            <Target>
-              <type value="QUICK_BOOT_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\serda\.android\avd\Pixel_8_Pro_API_34.avd" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-03-30T15:12:50.159930600Z" />
-        </State>
       </entry>
     </value>
   </component>

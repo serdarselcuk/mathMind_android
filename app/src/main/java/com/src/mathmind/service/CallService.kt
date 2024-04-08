@@ -96,12 +96,4 @@ class CallService {
             }
         })
     }
-
-
-    fun setIdlingResource(idlingResource: IdlingTool?, bollean: Boolean){
-        idlingResource?.setIdleState(bollean)
-    }
-
-
-
 }

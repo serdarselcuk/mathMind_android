@@ -29,8 +29,6 @@ class LoginFragment : Fragment() {
     private lateinit var passwordField: TextView
     private lateinit var logInButton: Button
     private lateinit var signOnButton: Button
-    private lateinit var userName: String
-    private lateinit var password: String
     private lateinit var mainActivity: MainActivity
 
 
@@ -45,33 +43,26 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-//        val navHostFragment =
-//            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-//        val navController = navHostFragment.navController
+
         viewModel = ViewModelProvider(this)[LoginViewModel::class.java]
-
-
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         val root: View = binding.root
         progressBar = binding.progressBar
-
         logInButton = binding.buttonLogin
         signOnButton = binding.buttonSignOn
         userNameField = binding.textInputUserName
         passwordField = binding.editTextTextPassword
 
         logInButton.setOnClickListener {
-            userName = userNameField.text.toString()
-            password = passwordField.text.toString()
-            if (userName.isBlank()) {
-                userNameField.error = ERROR_CONSTANTS.PROVIDE_USER_NAME
-            } else if (password.isBlank()) {
-                passwordField.error = ERROR_CONSTANTS.PROVIDE_PASSWORD
-            } else {
+            val userName: String? = viewModel.setUserName(userNameField).value
+            val password: String? = viewModel.setPassword(passwordField).value
+            if (
+                !userName.isNullOrEmpty() && !password.isNullOrEmpty()
+            ) {
                 progressBar.progressBar.visibility = View.VISIBLE
-                progressBar.overlayView.visibility = View.VISIBLE
-                viewModel.validateUser(userName, password, mainActivity.getIdlingTool())
+                viewModel.validateUser(mainActivity.getIdlingTool())
             }
+
         }
 
         signOnButton.setOnClickListener {
@@ -93,20 +84,11 @@ class LoginFragment : Fragment() {
                 is LoginViewState.Error -> {
                     showDialog(ERROR_CONSTANTS.ERROR_HEADER, state.message)
                 }
+
+                is LoginViewState.LoggedOut -> {}
             }
         }
-
-        val loginNameInput: EditText = binding.textInputUserName
-        assignListener(loginNameInput)
-
-        val passwordText: EditText = binding.editTextTextPassword
-        assignListener(loginNameInput)
-
-        loginNameInput.isFocused
-
-        loginNameInput.doAfterTextChanged { userName = it.toString() }
-        passwordText.doAfterTextChanged { password = it.toString() }
-
+        userNameField.isFocused
 
         return root
     }
@@ -119,35 +101,6 @@ class LoginFragment : Fragment() {
             throw IllegalStateException("LoginFragment must be attached to MainActivity")
         }
     }
-
-    private fun assignListener(textInput: EditText){
-        textInput.addTextChangedListener(object : TextWatcher {
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                if (!s.isNullOrBlank()) {
-                    println(s)
-                }
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (!s.isNullOrBlank()) {
-                    println(s)
-                }
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                if (!s.isNullOrBlank()) {
-                    println(s)
-                }
-            }
-        })
-    }
-
-//    override fun onActivityCreated(savedInstanceState: Bundle?) {
-//        super.onActivityCreated(savedInstanceState)
-//        viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
-//        // TODO: Use the ViewModel
-//    }
 
     private fun showDialog(title: String, message: String) {
         val builder = AlertDialog.Builder(requireContext())
@@ -164,8 +117,7 @@ class LoginFragment : Fragment() {
     override fun onDestroy() {
         userNameField.text = ""
         passwordField.text = ""
-        userName = ""
-        password = ""
+        viewModel.clear()
         super.onDestroy()
     }
 
@@ -174,11 +126,4 @@ class LoginFragment : Fragment() {
         findNavController().navigate(id)
     }
 
-//    @VisibleForTesting
-//    fun getIdlingResource(): IdlingResource {
-//        if (IdlingTool == null) {
-//            mIdlingResource = SimpleIdlingResource()
-//        }
-//        return mIdlingResource
-//    }
 }

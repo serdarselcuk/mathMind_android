@@ -2,19 +2,25 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
-
+<item
+android:title="aaaa"
+/>
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="@string/menu_home" />
-        <item
-            android:id="@+id/nav_guesser"
+            android:id="@+id/scoreboard"
+            android:title="a"
+            android:menuCategory="alternative"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_guesser" />
+            android:contentDescription="@string/menu_home" />
         <item
-            android:id="@+id/nav_feedbacker"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_feedBacker" />
+            android:id="@+id/newItem_2"
+            android:title="a"
+            android:icon="@drawable/ic_menu_gallery"
+            android:contentDescription="@string/menu_home" />
+        <item
+            android:id="@+id/newItem_3"
+            android:title="a"
+            android:icon="@drawable/ic_menu_gallery"
+            android:contentDescription="@string/menu_home" />
     </group>
 </menu>

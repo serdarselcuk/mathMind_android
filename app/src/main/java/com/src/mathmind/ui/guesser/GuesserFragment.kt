@@ -1,6 +1,7 @@
 package com.src.mathmind.ui.guesser
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import com.src.mathmind.MainActivity
 import com.src.mathmind.R
 import com.src.mathmind.databinding.FragmentGuesserBinding
 import com.src.mathmind.databinding.ProgressBarBinding
@@ -45,6 +47,16 @@ class GuesserFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    private lateinit var mainActivity: MainActivity
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is MainActivity) {
+            mainActivity = context
+        } else {
+            throw IllegalStateException("GuesserFragment must be attached to MainActivity")
+        }
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,9 +77,11 @@ class GuesserFragment : Fragment() {
         digit_cell_3 = binding.guessingNumber3
         digit_cell_4 = binding.guessingNumber4
         guesser_header = binding.guestureHistoryHeader
+        mainActivity.setShowSignOutVisible(false)
 
         val guessHistoryAdapter = GuestureHistoryAdapter(requireContext(), guessed_number_list)
         guessed_list_view.adapter = guessHistoryAdapter
+
 
         guessNumberCells = arrayOf(
             digit_cell_1,
@@ -93,7 +107,7 @@ class GuesserFragment : Fragment() {
                     0,//correctly placed number
                     0 // numbers on wrong place
                 )
-                Utility.evaluateNumber(numberKept, data) // decide about feedback
+                Utility.evaluateNumber(numberKept, data) // decide about feedback & update data object
                 progressBar.progressBar.visibility = View.GONE
                 if (guessed_number_list.contains(data)) {
                     highlightValues(data)
