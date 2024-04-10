@@ -16,6 +16,8 @@ import com.google.android.material.navigation.NavigationView
 import com.src.mathmind.MainActivity
 import com.src.mathmind.R
 import com.src.mathmind.databinding.FragmentHomeBinding
+import com.src.mathmind.models.LoginViewState
+import com.src.mathmind.ui.login.LoginViewModel
 
 class HomeFragment : Fragment() {
     private lateinit var mainActivity: MainActivity
@@ -34,6 +36,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         val homeViewModel =
             ViewModelProvider(this)[HomeViewModel::class.java]
 

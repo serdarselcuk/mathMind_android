@@ -1,10 +1,12 @@
 package com.src.mathmind.ui.guesser
 
+import ShowDialog
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.src.mathmind.MainActivity
 import com.src.mathmind.R
 import com.src.mathmind.databinding.FragmentGuesserBinding
@@ -77,7 +80,7 @@ class GuesserFragment : Fragment() {
         digit_cell_3 = binding.guessingNumber3
         digit_cell_4 = binding.guessingNumber4
         guesser_header = binding.guestureHistoryHeader
-        mainActivity.setShowSignOutVisible(false)
+        mainActivity.setShowSignOutVisible(true)
 
         val guessHistoryAdapter = GuestureHistoryAdapter(requireContext(), guessed_number_list)
         guessed_list_view.adapter = guessHistoryAdapter
@@ -292,25 +295,18 @@ class GuesserFragment : Fragment() {
     }
 
     private fun endGame() {
-        showDialog(
+        ShowDialog().create(
+            requireContext(),
             getString(R.string.game_end),
             getString(R.string.you_win),
-            R.id.action_nav_guesser_to_nav_home
+            getString(android.R.string.ok),
+            null,
+            onPositiveClick = {
+                Log.d("Guesser", "Navigating to home")
+                findNavController().navigate(R.id.action_nav_guesser_to_nav_home)
+            }
         )
         println("game end")
-    }
-
-    private fun showDialog(title: String, message: String, nextView: Int) {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle(title)
-            .setMessage(message)
-            .setPositiveButton(getString(R.string.OK_BUTTON)) { dialog, _ ->
-                dialog.dismiss()
-                // Navigate to the login screen
-                view?.findNavController()?.navigate(nextView)
-            }
-        val dialog = builder.create()
-        dialog.show()
     }
 
 }

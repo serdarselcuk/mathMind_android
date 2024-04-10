@@ -1,5 +1,6 @@
 package com.src.mathmind.ui.login
 
+import ShowDialog
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
@@ -78,11 +79,25 @@ class LoginFragment : Fragment() {
                 is LoginViewState.ValidationError -> {
                     progressBar.progressBar.visibility = View.GONE
                     progressBar.overlayView.visibility = View.GONE
-                    showDialog(ERROR_CONSTANTS.VALIDATION_FAILED, state.message)
+                    context?.let {
+                        ShowDialog().create(
+                            it,
+                            ERROR_CONSTANTS.VALIDATION_FAILED,
+                            state.message,
+                            getString(android.R.string.ok)
+                        )
+                    }
                 }
 
                 is LoginViewState.Error -> {
-                    showDialog(ERROR_CONSTANTS.ERROR_HEADER, state.message)
+                    context?.let {
+                        ShowDialog().create(
+                            it,
+                            ERROR_CONSTANTS.ERROR_HEADER,
+                            state.message,
+                            getString(android.R.string.ok)
+                        )
+                    }
                 }
 
                 is LoginViewState.LoggedOut -> {}
@@ -100,18 +115,6 @@ class LoginFragment : Fragment() {
         } else {
             throw IllegalStateException("LoginFragment must be attached to MainActivity")
         }
-    }
-
-    private fun showDialog(title: String, message: String) {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle(title)
-            .setMessage(message)
-            .setPositiveButton(getString(R.string.OK_BUTTON)) { dialog, _ ->
-                dialog.dismiss()
-                // Navigate to the login screen
-            }
-        val dialog = builder.create()
-        dialog.show()
     }
 
     override fun onDestroy() {

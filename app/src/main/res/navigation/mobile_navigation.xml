@@ -41,6 +41,9 @@
         tools:layout="@layout/fragment_guesser" >
 
         <action
+            android:id="@+id/action_nav_guesser_to_login"
+            app:destination="@id/nav_login" />
+        <action
             android:id="@+id/action_nav_guesser_to_nav_home"
             app:destination="@id/nav_home" />
     </fragment>
@@ -51,6 +54,9 @@
         android:label="@string/feedBacker_header"
         tools:layout="@layout/fragment_feedbacker" >
 
+        <action
+            android:id="@+id/action_nav_feedbacker_to_login"
+            app:destination="@id/nav_login" />
         <action
             android:id="@+id/action_nav_feedbacker_to_nav_home"
             app:destination="@id/nav_home" />

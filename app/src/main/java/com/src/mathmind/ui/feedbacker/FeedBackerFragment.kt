@@ -1,5 +1,6 @@
 package com.src.mathmind.ui.feedbacker
 
+import ShowDialog
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
@@ -98,7 +99,7 @@ class FeedBackerFragment : Fragment() {
 
         _binding = FragmentFeedbackerBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        mainActivity.setShowSignOutVisible(false)
+        mainActivity.setShowSignOutVisible(true)
         progressBar = binding.progressBar
         plusButton = binding.plusButton
         minusButton = binding.minusButton
@@ -118,9 +119,12 @@ class FeedBackerFragment : Fragment() {
         setClickListeners(doneButton)
 
         if (feedBackerViewModel.guessNum.value == 0) {
-            showDialog(
+
+            ShowDialog().create(
+                requireContext(),
                 getString(R.string.get_ready),
-                getString(R.string.hold_a_number)
+                getString(R.string.hold_a_number),
+                getString(android.R.string.ok)
             )
         }
 
@@ -213,17 +217,6 @@ class FeedBackerFragment : Fragment() {
         Log.d(LogTag.FEEDBACKER_FRAGMENT, "Destroying")
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun showDialog(title: String, message: String) {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle(title)
-            .setMessage(message)
-            .setPositiveButton(getString(R.string.OK_BUTTON)) { dialog, _ ->
-                dialog.dismiss()
-            }
-        val dialog = builder.create()
-        dialog.show()
     }
 
     private fun showDialog(title: String, message: String, navigate: Int) {
