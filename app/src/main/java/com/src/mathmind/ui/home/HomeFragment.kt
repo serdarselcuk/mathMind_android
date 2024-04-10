@@ -2,22 +2,16 @@ package com.src.mathmind.ui.home
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.navigation.NavigationView
 import com.src.mathmind.MainActivity
 import com.src.mathmind.R
 import com.src.mathmind.databinding.FragmentHomeBinding
-import com.src.mathmind.models.LoginViewState
-import com.src.mathmind.ui.login.LoginViewModel
 
 class HomeFragment : Fragment() {
     private lateinit var mainActivity: MainActivity

@@ -1,19 +1,15 @@
 package com.src.mathmind
 
 import ShowDialog
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -21,8 +17,6 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.src.mathmind.databinding.ActivityMainBinding
 import com.src.mathmind.databinding.AppBarMainBinding
-import com.src.mathmind.models.LoginViewState
-import com.src.mathmind.service.CallService
 import com.src.mathmind.ui.login.LoginViewModel
 import com.src.mathmind.utils.IdlingTool
 
