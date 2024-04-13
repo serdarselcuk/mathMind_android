@@ -1,7 +1,6 @@
 package com.src.mathmind.service
 
-import com.src.mathmind.models.Password
-import com.src.mathmind.models.ScoreBoardModel
+import com.src.mathmind.models.ScoreModel
 import com.src.mathmind.models.UserModel
 import com.google.gson.GsonBuilder
 import okhttp3.Interceptor
@@ -41,8 +40,10 @@ object RequestInterceptor : Interceptor {
 
 interface MathMindService {
 
-    @GET("/score")
-    fun getScore() : Call<ScoreBoardModel>
+    @GET("/topScoreList")
+    fun getTopScoreList() : Call<List<ScoreModel>>
+    @POST("/score")
+    fun putScore(@Body user: ScoreModel):Call<ServiceResponse<String>>
 
     @POST("/user/validate")
     fun validateUser(@Query("param_1") param1:String) : Call<Boolean>

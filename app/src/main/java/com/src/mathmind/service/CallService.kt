@@ -3,6 +3,7 @@ package com.src.mathmind.service
 import android.util.Log
 import androidx.annotation.Nullable
 import androidx.test.espresso.IdlingResource
+import com.src.mathmind.models.ScoreModel
 import com.src.mathmind.models.UserModel
 import com.src.mathmind.utils.IdlingTool
 import retrofit2.Call
@@ -91,9 +92,49 @@ class CallService {
             override fun onFailure(call: Call<ServiceResponse<UserModel>>, t: Throwable) {
                 Log.e(LogTag.CALL_SERVICE, t.printStackTrace().toString())
                 callback(ServiceResponse("Error occurred"))
-
                 idlingResource?.setIdleState(true)
             }
         })
     }
+
+    fun getScoreBoardList(idlingResource: IdlingTool?, callback: (List<ScoreModel>?) -> Unit) {
+        idlingResource?.setIdleState(false)
+        val call = mathMindService.getTopScoreList()
+        call.enqueue(object : Callback<List<ScoreModel>> {
+            override fun onResponse(
+                call: Call<List<ScoreModel>>,
+                response: Response<List<ScoreModel>>,
+            ) {
+                if(response.isSuccessful) {
+                    callback(response.body())
+                }
+            }
+
+            override fun onFailure(call: Call<List<ScoreModel>>, t: Throwable) {
+                Log.d(LogTag.CALL_SERVICE, "Score list call failed")
+                throw t
+            }
+        })
+    }
+
+    fun saveScore(scoreModel: ScoreModel, idlingResource: IdlingTool?){
+        idlingResource?.setIdleState(false)
+        val call = mathMindService.putScore(scoreModel)
+        call.enqueue(object: Callback<ServiceResponse<String>> {
+
+            override fun onResponse(
+                call: Call<ServiceResponse<String>>,
+                response: Response<ServiceResponse<String>>,
+            ) {
+                if(response.isSuccessful) Log.d(LogTag.CALL_SERVICE, "Score post call failed")
+            }
+
+            override fun onFailure(call: Call<ServiceResponse<String>>, t: Throwable) {
+                Log.d(LogTag.CALL_SERVICE, "Score post call failed $t")
+                throw t
+            }
+
+        })
+    }
+
 }
