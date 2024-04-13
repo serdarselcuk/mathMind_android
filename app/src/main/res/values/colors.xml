@@ -10,4 +10,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red_highlight">#90E13737</color>
     <color name="yellow_highlight">#A1FFEB3B</color>
+    <color name="border_color">#FF000000</color>
+
 </resources>
