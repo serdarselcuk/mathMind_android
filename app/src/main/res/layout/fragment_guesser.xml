@@ -40,9 +40,9 @@
         android:layout_marginTop="30dp"
         android:background="@drawable/edit_text_boarder"
         android:ems="10"
-        android:nextFocusRight="@+id/guessing_number_3"
-        android:maxLength="1"
         android:inputType="number"
+        android:maxLength="1"
+        android:nextFocusRight="@+id/guessing_number_3"
         android:textAlignment="center"
         app:layout_constraintStart_toEndOf="@+id/guessing_number_1"
         app:layout_constraintTop_toBottomOf="@+id/score_text_field" />
@@ -55,9 +55,9 @@
         android:layout_marginTop="30dp"
         android:background="@drawable/edit_text_boarder"
         android:ems="10"
-        android:nextFocusRight="@+id/guessing_number_4"
-        android:maxLength="1"
         android:inputType="number"
+        android:maxLength="1"
+        android:nextFocusRight="@+id/guessing_number_4"
         android:textAlignment="center"
         app:layout_constraintStart_toEndOf="@+id/guessing_number_2"
         app:layout_constraintTop_toBottomOf="@+id/score_text_field" />
@@ -70,13 +70,12 @@
         android:layout_marginTop="30dp"
         android:background="@drawable/edit_text_boarder"
         android:ems="10"
-        android:nextFocusRight="@+id/guessing_button"
-        android:maxLength="1"
         android:inputType="number"
+        android:maxLength="1"
+        android:nextFocusRight="@+id/guessing_button"
         android:textAlignment="center"
         app:layout_constraintStart_toEndOf="@+id/guessing_number_3"
-        app:layout_constraintTop_toBottomOf="@+id/score_text_field"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/score_text_field" />
 
     <Button
         android:id="@+id/guessing_button"
@@ -104,8 +103,8 @@
         android:id="@+id/turn_count_board"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/header_1_height"
-        android:layout_marginEnd="13pt"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="13pt"
         android:text="@string/turn_count"
         android:textAlignment="center"
         android:textSize="@dimen/textHeader_2"
@@ -125,8 +124,7 @@
         app:layout_constraintHorizontal_bias="0.58"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/guesture_history_header"
-        app:layout_constraintVertical_bias="0.933" >
-    </ListView>
+        app:layout_constraintVertical_bias="0.933"></ListView>
 
     <include
         android:id="@+id/progressBar"

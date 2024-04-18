@@ -24,8 +24,6 @@ import com.src.mathmind.R
 import com.src.mathmind.databinding.FragmentGuesserBinding
 import com.src.mathmind.databinding.ProgressBarBinding
 import com.src.mathmind.models.GuessModel
-import com.src.mathmind.models.ScoreModel
-import com.src.mathmind.service.CallService
 import com.src.mathmind.utils.ERROR_CONSTANTS
 import com.src.mathmind.utils.LogTag
 import kotlinx.coroutines.Deferred
@@ -35,14 +33,13 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.LocalDate
 
 class GuesserFragment : Fragment() {
 
     private var _binding: FragmentGuesserBinding? = null
 
-    private lateinit var scoreBoard:TextView
-    private lateinit var turnCountBoard:TextView
+    private lateinit var scoreBoard: TextView
+    private lateinit var turnCountBoard: TextView
     private lateinit var digit_cell_1: EditText
     private lateinit var digit_cell_2: EditText
     private lateinit var digit_cell_3: EditText
@@ -81,7 +78,7 @@ class GuesserFragment : Fragment() {
         _binding = FragmentGuesserBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val sharedPreferences = context?.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
-        userName = sharedPreferences?.getString("userName", null)?:"User"
+        userName = sharedPreferences?.getString("userName", null) ?: "User"
         progressBar = binding.progressBar
         scoreBoard = binding.scoreTextField
         turnCountBoard = binding.turnCountBoard
@@ -94,19 +91,19 @@ class GuesserFragment : Fragment() {
         guesser_header = binding.guestureHistoryHeader
         mainActivity.setShowSignOutVisible(true)
 
-        val guessHistoryAdapter:GuestureHistoryAdapter? = context?.let { cont ->
-                guessViewModel.guessed_number_list.value?.let { guessNumList ->
+        val guessHistoryAdapter: GuestureHistoryAdapter? = context?.let { cont ->
+            guessViewModel.guessed_number_list.value?.let { guessNumList ->
                 GuestureHistoryAdapter(cont, guessNumList)
             }
         }
 
         guessed_list_view.adapter = guessHistoryAdapter
 
-        guessNumberCells = arrayOf(digit_cell_1,digit_cell_2,digit_cell_3,digit_cell_4)
+        guessNumberCells = arrayOf(digit_cell_1, digit_cell_2, digit_cell_3, digit_cell_4)
 
-        for(editText in guessNumberCells) {
+        for (editText in guessNumberCells) {
             assignTextChangeListener(editText, root)
-            focusListenerForDigitCells( editText)
+            focusListenerForDigitCells(editText)
         }
 
         guess_button.setOnClickListener {
@@ -121,7 +118,7 @@ class GuesserFragment : Fragment() {
                 lifecycleScope.launch {
                     when (val result = guessViewModel.startEvaluation(numberArray)) {
                         is Int -> {
-                            guessViewModel.getGuessCount().run {  updateTurn(this) }
+                            guessViewModel.getGuessCount().run { updateTurn(this) }
                             guessViewModel.score.value.let {
                                 if (it != null) {
                                     updateScore(it.getPoint())
@@ -132,7 +129,7 @@ class GuesserFragment : Fragment() {
 
                         is GuessModel -> highlightValues(result)
                         null -> {
-                            if(!guessViewModel.saveScore(mainActivity.getIdlingTool(), userName)){
+                            if (!guessViewModel.saveScore(mainActivity.getIdlingTool(), userName)) {
                                 showErrorDialog()
                             }
                             endGame(guessViewModel.score.value!!.getPoint())
@@ -140,7 +137,7 @@ class GuesserFragment : Fragment() {
                     }
                     progressBar.progressBar.visibility = View.GONE
                 }
-                if(!highlightingActive) for(cell in guessNumberCells) cell.text.clear()
+                if (!highlightingActive) for (cell in guessNumberCells) cell.text.clear()
                 else highlightingActive = false
                 digit_cell_1.requestFocus()
             }
@@ -151,7 +148,6 @@ class GuesserFragment : Fragment() {
         updateTurn(0)
         return root
     }
-
 
 
     private fun highlightValues(data: GuessModel) {
@@ -191,7 +187,7 @@ class GuesserFragment : Fragment() {
         color: Int = R.color.red_highlight,
         flash: Boolean = true,
         repeatCount: Int = 5,
-        timeOut: Long = 100
+        timeOut: Long = 100,
     ) {
         val highlightingColor: Int? = context?.let { ContextCompat.getColor(it, color) }
         val background = obj.background
@@ -232,7 +228,7 @@ class GuesserFragment : Fragment() {
     private fun highLightListFromHistory(
         data: GuessModel,
         color: Int = R.color.red_highlight,
-        flash: Boolean
+        flash: Boolean,
     ) {
         val element: View? = findListElementByText(
             R.id.guesture_history_list,
@@ -269,9 +265,9 @@ class GuesserFragment : Fragment() {
     private fun assignTextChangeListener(textInput: EditText, rootView: View) {
 
         textInput.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
                 if (s?.length == 1) {
@@ -298,8 +294,8 @@ class GuesserFragment : Fragment() {
 
     }
 
-    private fun endGame(point:Int) {
-        val text = getString(R.string.you_win) +"$point"
+    private fun endGame(point: Int) {
+        val text = getString(R.string.you_win) + "$point"
         context?.let {
             ShowDialog().create(
                 it,
@@ -334,8 +330,8 @@ class GuesserFragment : Fragment() {
         scoreBoard.text = context?.getString(R.string.user_score, userName, point)
     }
 
-    private fun updateTurn(count:Int){
-        turnCountBoard.text = context?.getString(R.string.turn_count, count )
+    private fun updateTurn(count: Int) {
+        turnCountBoard.text = context?.getString(R.string.turn_count, count)
     }
 
 }

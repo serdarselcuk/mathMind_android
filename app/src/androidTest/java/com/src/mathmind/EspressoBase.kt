@@ -11,7 +11,7 @@ import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
 import org.hamcrest.core.AllOf
 
-open class EspressoBase() {
+open class EspressoBase {
 
     private val userName:String = "use_2"
     private val password:String = "Password1."
