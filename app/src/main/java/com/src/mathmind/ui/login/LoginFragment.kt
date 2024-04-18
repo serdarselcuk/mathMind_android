@@ -49,6 +49,8 @@ class LoginFragment : Fragment() {
         userNameField = binding.textInputUserName
         passwordField = binding.editTextTextPassword
 
+        val sharedPreferences = context?.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+
         logInButton.setOnClickListener {
             val userName: String? = viewModel.setUserName(userNameField).value
             val password: String? = viewModel.setPassword(passwordField).value
@@ -56,9 +58,8 @@ class LoginFragment : Fragment() {
                 !userName.isNullOrEmpty() && !password.isNullOrEmpty()
             ) {
                 progressBar.progressBar.visibility = View.VISIBLE
-                viewModel.validateUser(mainActivity.getIdlingTool())
+                viewModel.validateUser(mainActivity.getIdlingTool(), sharedPreferences)
             }
-
         }
 
         signOnButton.setOnClickListener {
@@ -68,7 +69,9 @@ class LoginFragment : Fragment() {
         viewModel.loginViewState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is LoginViewState.ValidationSuccess -> {
+                    viewModel.userName.value?.let { mainActivity.updateUserName(it) }
                     navigateTo(R.id.action_login_to_nav_home)
+
                 }
 
                 is LoginViewState.ValidationError -> {

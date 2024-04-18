@@ -2,6 +2,7 @@ package com.src.mathmind.utils
 
 class ERROR_CONSTANTS {
     companion object{
+        const val SCORE_SAVE_FAILURE = "Score could not be saved"
         const val VALIDATION_FAILED = "Validation failed"
         const val ERROR_HEADER = "Error"
         const val CREDENTIALS_VALIDATION_FAILURE = "User or Password is not found"

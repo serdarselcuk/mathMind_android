@@ -2,7 +2,9 @@ import android.content.Context
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 
-class ShowDialog() {
+class ShowDialog{
+
+    private var alertDialog: AlertDialog? = null
     fun create(
         context: Context,
         title: String,
@@ -11,7 +13,7 @@ class ShowDialog() {
         negativeButton: String? = null,
         onPositiveClick: (() -> Unit)? = null,
         onNegativeClick: (() -> Unit)? = null
-    ) {
+    ):ShowDialog {
         val builder = AlertDialog.Builder(context)
         builder.setTitle(title)
         builder.setMessage(message)
@@ -32,7 +34,9 @@ class ShowDialog() {
             }
         }
 
-        val dialog = builder.create()
-        dialog.show()
+        alertDialog = builder.create()
+        alertDialog!!.show()
+        return this
     }
+
 }

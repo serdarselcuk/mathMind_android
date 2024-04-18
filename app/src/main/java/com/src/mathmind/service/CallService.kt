@@ -1,11 +1,10 @@
 package com.src.mathmind.service
 
 import android.util.Log
-import androidx.annotation.Nullable
-import androidx.test.espresso.IdlingResource
 import com.src.mathmind.models.ScoreModel
 import com.src.mathmind.models.UserModel
 import com.src.mathmind.utils.IdlingTool
+import com.src.mathmind.utils.LogTag
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -107,29 +106,29 @@ class CallService {
             ) {
                 if(response.isSuccessful) {
                     callback(response.body())
+                }else{
+                    callback(null)
                 }
             }
 
             override fun onFailure(call: Call<List<ScoreModel>>, t: Throwable) {
                 Log.d(LogTag.CALL_SERVICE, "Score list call failed")
-                throw t
+                callback(null)
             }
         })
     }
 
     fun saveScore(scoreModel: ScoreModel, idlingResource: IdlingTool?){
         idlingResource?.setIdleState(false)
-        val call = mathMindService.putScore(scoreModel)
-        call.enqueue(object: Callback<ServiceResponse<String>> {
+        val call = mathMindService.saveScore(scoreModel)
+        call.enqueue(object: Callback<String> {
 
-            override fun onResponse(
-                call: Call<ServiceResponse<String>>,
-                response: Response<ServiceResponse<String>>,
-            ) {
-                if(response.isSuccessful) Log.d(LogTag.CALL_SERVICE, "Score post call failed")
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if(!response.isSuccessful)
+                    Log.d(LogTag.CALL_SERVICE, "Score post call failed ${response.body()}")
             }
 
-            override fun onFailure(call: Call<ServiceResponse<String>>, t: Throwable) {
+            override fun onFailure(call: Call<String>, t: Throwable) {
                 Log.d(LogTag.CALL_SERVICE, "Score post call failed $t")
                 throw t
             }

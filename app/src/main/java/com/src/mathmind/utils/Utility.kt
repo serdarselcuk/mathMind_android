@@ -1,6 +1,7 @@
 package com.src.mathmind.utils
 
 import com.src.mathmind.models.GuessModel
+import com.src.mathmind.ui.guesser.ScoreCalculus
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.regex.Pattern
@@ -76,13 +77,14 @@ class Utility {
         * placed number , not_placed number
         * also updating data
         * */
-        fun evaluateNumber(numberKept: Int, data: GuessModel):MutableList<Int> {
+        fun evaluateNumber(numberKept: Int, data: GuessModel, scoreCalculus: ScoreCalculus? = null):MutableList<Int> {
             val feedBack: Array<Int> = if (data.guessedNumber == numberKept) {
                 arrayOf(4,0)
             } else {
                 generateFeedBack(
                     numToArray(numberKept),
-                    numToArray(data.guessedNumber)
+                    numToArray(data.guessedNumber),
+                    scoreCalculus
                 )
             }
             data.placedNumber = feedBack[0]
@@ -91,14 +93,17 @@ class Utility {
             return mutableListOf( feedBack[0], feedBack[1] )
         }
 
-        fun generateFeedBack(keptNumArray:List<Int>, numToCompare:List<Int>): Array<Int>{
+        fun generateFeedBack(keptNumArray:List<Int>, numToCompare:List<Int>, scoreCalculus: ScoreCalculus?): Array<Int>{
             var placedNumber = 0
             var notPlacedNumber = 0
 
             numToCompare.forEachIndexed{index,digit->
                 if (keptNumArray[index] == digit) {
+                    scoreCalculus?.setPositionalPoint(index, true)
                     placedNumber++
                 } else if (keptNumArray.contains(digit)) {
+                    val positionOfDigit = keptNumArray.indexOf(digit)
+                    scoreCalculus?.setPositionalPoint(positionOfDigit, false)
                     notPlacedNumber++
                 }
             }

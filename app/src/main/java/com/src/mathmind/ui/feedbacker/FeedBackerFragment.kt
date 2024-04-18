@@ -19,7 +19,7 @@ import com.src.mathmind.MainActivity
 import com.src.mathmind.R
 import com.src.mathmind.databinding.FragmentFeedbackerBinding
 import com.src.mathmind.databinding.ProgressBarBinding
-import com.src.mathmind.service.LogTag
+import com.src.mathmind.utils.LogTag
 import com.src.mathmind.ui.guesser.GuestureHistoryAdapter
 import com.src.mathmind.utils.RandomGenerator
 import kotlinx.coroutines.launch

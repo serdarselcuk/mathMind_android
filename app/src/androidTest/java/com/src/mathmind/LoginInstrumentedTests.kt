@@ -13,7 +13,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import com.src.mathmind.service.LogTag
+import com.src.mathmind.utils.LogTag
 import com.src.mathmind.utils.ERROR_CONSTANTS
 import org.junit.After
 import org.junit.Before
@@ -45,12 +45,12 @@ class LoginInstrumentedTests : EspressoBase() {
             IdlingRegistry.getInstance().register(idlingResource)
         }
 
-        Log.d("UI_TEST", "Setup")
+        Log.d(LogTag.UI_TEST, "Setup")
     }
 
     @After
     fun tearsDown() {
-        Log.d("UI_TEST", "closing")
+        Log.d(LogTag.UI_TEST, "closing")
         IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
@@ -67,7 +67,7 @@ class LoginInstrumentedTests : EspressoBase() {
 
     @Test
     fun user_able_to_see_guessed_number_on_feedbacker() {
-        Log.d("UI_TEST", "user able to see guessed number on feedbacker")
+        Log.d(LogTag.UI_TEST, "user able to see guessed number on feedbacker")
         // Context of the app under test.
         login()
         landOnFeedBacker()
@@ -85,7 +85,7 @@ class LoginInstrumentedTests : EspressoBase() {
 
     @Test
     fun user_enters_wrong_userName() {
-        Log.d("UI_TEST", "user enters wrong userName")
+        Log.d(LogTag.UI_TEST, "user enters wrong userName")
         // Context of the app under test.
         onView(withId(R.id.textInputUserName))
             .perform(typeText("userName"))
@@ -109,7 +109,7 @@ class LoginInstrumentedTests : EspressoBase() {
 
     @Test
     fun user_not_enters_userName_on_login() {
-        Log.d("UI_TEST", "user not enters userName on login")
+        Log.d(LogTag.UI_TEST, "user not enters userName on login")
         // Context of the app under test.
 
         onView(withId(R.id.editTextTextPassword))
@@ -124,7 +124,7 @@ class LoginInstrumentedTests : EspressoBase() {
 
     @Test
     fun user_not_enters_password_on_login() {
-        Log.d("UI_TEST", "user not enters password on login")
+        Log.d(LogTag.UI_TEST, "user not enters password on login")
         // Context of the app under test.
 
         onView(withId(R.id.textInputUserName))
@@ -139,13 +139,12 @@ class LoginInstrumentedTests : EspressoBase() {
 
     @Test
     fun user_get_email_entry_error_while_signing_on() {
-        Log.d("UI_TEST", "user get email entry error while signing on")
+        Log.d(LogTag.UI_TEST, "user get email entry error while signing on")
         // Context of the app under test.
         onView(withId(R.id.buttonSignOn)).perform(click())
 
         onView(withId(R.id.emailInput)).perform(click())
         onView(withId(R.id.userNameInput)).perform(click())
-
 
         onView(withId(R.id.emailErrorView))
             .check(ViewAssertions.matches(withText((ERROR_CONSTANTS.EMAIL_EMPTY))))

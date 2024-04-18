@@ -1,5 +1,6 @@
 package com.src.mathmind.ui.login
 
+import android.content.SharedPreferences
 import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -26,17 +27,20 @@ class LoginViewModel : ViewModel() {
     val loginViewState: LiveData<LoginViewState> = _loginViewState
     private val mockUser = UserModel(1, "ss", Date(System.currentTimeMillis()).toString(), "","","","","")
 
-    fun validateUser(idlingTool: IdlingTool?) {
+    fun validateUser(idlingTool: IdlingTool?, sharedEdit: SharedPreferences?) {
+
         viewModelScope.launch {
             try {
                 val user: UserModel? = if(userName.value == "ss") mockUser
                 else userName.value?.let {userName_ ->
                     password.value?.let {password_ ->
-                        validateCredentials(userName_, password_, idlingTool)
+                       validateCredentials(userName_, password_, idlingTool)
                     }
                 }
 
                 if (user != null) {
+                    sharedEdit!!.edit()?.putString("userName", user.userName)?.apply()
+                    // shared data can be accessed from any class
                     _loginViewState.value = LoginViewState.ValidationSuccess
                 } else {
                     _loginViewState.value = LoginViewState.ValidationError(ERROR_CONSTANTS.CREDENTIALS_VALIDATION_FAILURE)
@@ -47,7 +51,7 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-        private suspend fun validateCredentials(userName: String, password: String, idlingTool: IdlingTool?): UserModel? {
+    private suspend fun validateCredentials(userName: String, password: String, idlingTool: IdlingTool?): UserModel? {
         val user: UserModel? = getUserValidated(userName, idlingTool)
         val successLogin = user != null && validatePassword(user.password, password, user.hashCode)
         return if (successLogin) user

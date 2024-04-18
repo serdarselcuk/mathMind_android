@@ -6,12 +6,23 @@
     android:layout_height="match_parent"
     tools:context=".ui.guesser.GuesserFragment">
 
+    <TextView
+        android:id="@+id/score_text_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50pt"
+        android:layout_marginTop="30dp"
+        android:text="@string/user_score"
+        android:textSize="@dimen/textHeader_2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <EditText
         android:id="@+id/guessing_number_1"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/edit_text_boarder"
         android:ems="10"
         android:inputType="number"
@@ -19,14 +30,14 @@
         android:nextFocusRight="@+id/guessing_number_2"
         android:textAlignment="center"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/score_text_field" />
 
     <EditText
         android:id="@+id/guessing_number_2"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginStart="@dimen/inter_cellular_distance"
+        android:layout_marginTop="30dp"
         android:background="@drawable/edit_text_boarder"
         android:ems="10"
         android:nextFocusRight="@+id/guessing_number_3"
@@ -34,14 +45,14 @@
         android:inputType="number"
         android:textAlignment="center"
         app:layout_constraintStart_toEndOf="@+id/guessing_number_1"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/score_text_field" />
 
     <EditText
         android:id="@+id/guessing_number_3"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginStart="@dimen/inter_cellular_distance"
+        android:layout_marginTop="30dp"
         android:background="@drawable/edit_text_boarder"
         android:ems="10"
         android:nextFocusRight="@+id/guessing_number_4"
@@ -49,14 +60,14 @@
         android:inputType="number"
         android:textAlignment="center"
         app:layout_constraintStart_toEndOf="@+id/guessing_number_2"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/score_text_field" />
 
     <EditText
         android:id="@+id/guessing_number_4"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginStart="@dimen/inter_cellular_distance"
+        android:layout_marginTop="30dp"
         android:background="@drawable/edit_text_boarder"
         android:ems="10"
         android:nextFocusRight="@+id/guessing_button"
@@ -64,12 +75,22 @@
         android:inputType="number"
         android:textAlignment="center"
         app:layout_constraintStart_toEndOf="@+id/guessing_number_3"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/score_text_field"
         />
+
+    <Button
+        android:id="@+id/guessing_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:text="@string/guess"
+        app:layout_constraintStart_toEndOf="@+id/guessing_number_4"
+        app:layout_constraintTop_toBottomOf="@+id/score_text_field" />
 
     <TextView
         android:id="@+id/guesture_history_header"
-        android:layout_width="@dimen/header_1_width"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/header_1_height"
         android:layout_marginStart="@dimen/page_common_start_margin"
         android:layout_marginTop="20dp"
@@ -79,20 +100,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/guessing_number_3" />
 
-    <Button
-        android:id="@+id/guessing_button"
+    <TextView
+        android:id="@+id/turn_count_board"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="52dp"
-        android:text="@string/guess"
-        app:layout_constraintStart_toEndOf="@+id/guessing_number_4"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="@dimen/header_1_height"
+        android:layout_marginEnd="13pt"
+        android:layout_marginTop="20dp"
+        android:text="@string/turn_count"
+        android:textAlignment="center"
+        android:textSize="@dimen/textHeader_2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guessing_number_3" />
+
 
     <ListView
         android:id="@+id/guesture_history_list"
         android:layout_width="350dp"
-        android:layout_height="550dp"
+        android:layout_height="wrap_content"
         android:divider="@null"
         android:fastScrollEnabled="true"
         android:scrollbarStyle="insideInset"
@@ -105,8 +129,7 @@
     </ListView>
 
     <include
-        layout="@layout/progress_bar"
         android:id="@+id/progressBar"
-        />
+        layout="@layout/progress_bar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

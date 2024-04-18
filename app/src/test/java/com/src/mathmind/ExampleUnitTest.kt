@@ -2,8 +2,14 @@ package com.src.mathmind
 
 import android.provider.ContactsContract.Data
 import com.src.mathmind.models.GuessModel
+import com.src.mathmind.models.ScoreModel
+import com.src.mathmind.models.UserModel
 import com.src.mathmind.utils.Utility
+import org.junit.Assert
 import org.junit.Test
+import java.sql.Date
+
+private const val SCM_LENGTH_EXPECTATION = 32
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -11,38 +17,36 @@ import org.junit.Test
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest {
+
     @Test
     fun feedBack_plus_isCorrect() {
         val feedback = Utility.generateFeedBack(listOf(1,2,3,4), listOf(1,2,4,0))
-        assert(feedback[0]==2)
+         Assert.assertEquals(feedback[0],2)
     }
 
     @Test
     fun feedBack_minus_isCorrect() {
         val feedback = Utility.generateFeedBack(listOf(1,2,3,4), listOf(1,2,4,0))
-        assert(feedback[1]==1)
+         Assert.assertEquals(feedback[1],1)
     }
 
     @Test
     fun numArray_isCorrect(){
         val a = Utility.numToArray(2345)
-        assert(a == listOf(2,3,4,5))
+         Assert.assertEquals(a , listOf(2,3,4,5))
     }
 
     @Test
     fun arrayToNum_isCorrect(){
         val a = Utility.arrayToNum(intArrayOf(1,2,3,4))
-        assert(a== 1234)
+         Assert.assertEquals(a, 1234)
     }
 
     @Test()
     fun email_isWrong_AT_sign_missed(){
-        try {
-            Utility.checkEmail("test.com")
-        }catch (e:Exception ){
-            assert(e is IllegalArgumentException)
-        }
 
+            Assert.assertThrows(IllegalArgumentException::class.java){
+                Utility.checkEmail("test.com")}
     }
 
     @Test()
@@ -50,34 +54,60 @@ class ExampleUnitTest {
         val testEmailValue = "test@email.com"
 
         val email = Utility.checkEmail(testEmailValue)
-        assert(email == testEmailValue)
+        Assert.assertEquals(email , testEmailValue)
     }
 
     @Test
     fun evaluateNumber_feedback_isCorrect_for_matching_numbers(){
         val guessmodel = GuessModel(1234, 0,0)
         val feedBack = Utility.evaluateNumber(1234, guessmodel)
-        assert(feedBack == mutableListOf(4,0))
+        Assert.assertEquals(feedBack , mutableListOf(4,0))
     }
 
     @Test
     fun evaluateNumber_data_isCorrect_for_matching_numbers(){
         val guessmodel = GuessModel(1234, 0,0)
         Utility.evaluateNumber(1234, guessmodel)
-        assert(guessmodel.placedNumber == 4 && guessmodel.notPlacedNumber == 0)
+        Assert.assertTrue(guessmodel.placedNumber == 4 && guessmodel.notPlacedNumber == 0)
     }
 
     @Test
     fun evaluateNumber_feedback_isCorrect_for_NONmatching_numbers(){
         val guessmodel = GuessModel(1234, 0,0)
         val feedBack = Utility.evaluateNumber(4237, guessmodel)
-        assert(feedBack == mutableListOf(2,1))
+        Assert.assertEquals(feedBack, mutableListOf(2,1))
     }
 
     @Test
     fun evaluateNumber_data_isCorrect_for_NONmatching_numbers(){
         val guessmodel = GuessModel(1234, 0,0)
         Utility.evaluateNumber(4237, guessmodel)
-        assert(guessmodel.placedNumber == 2 && guessmodel.notPlacedNumber == 1)
+        Assert.assertTrue(guessmodel.placedNumber == 2 && guessmodel.notPlacedNumber == 1)
+    }
+
+    @Test
+    fun returninguserNameLenght_11(){
+        val scoreModel = ScoreModel("userTst",123, Date(System.currentTimeMillis()))
+        Assert.assertEquals(SCM_LENGTH_EXPECTATION, scoreModel.toString().length)
+
+    }
+    @Test
+    fun returninguserNameLenght_13(){
+        val scoreModel = ScoreModel("a".repeat(13),123, Date(System.currentTimeMillis()))
+        Assert.assertEquals(SCM_LENGTH_EXPECTATION, scoreModel.toString().length)
+
+    }
+    @Test
+    fun returninguserNameLenght_12(){
+        val scoreModel = ScoreModel("a".repeat(12),123, Date(System.currentTimeMillis()))
+        Assert.assertEquals(SCM_LENGTH_EXPECTATION, scoreModel.toString().length)
+
+    }
+
+    @Test
+    fun returninguserNameLenght__(){
+        val scoreModel = ScoreModel("",123, Date(System.currentTimeMillis()))
+        Assert.assertEquals(SCM_LENGTH_EXPECTATION, scoreModel.toString().length)
+
     }
 }

@@ -22,7 +22,7 @@
     <string name="enter_password">Enter your password</string>
     <string name="guess">Guess</string>
     <string name="guessed_numbers_list_header">Guessed numbers history</string>
-    <string name="numbers_count"> -count: %d</string>
+    <string name="turn_count"> turn: %1$d</string>
     <string name="plus_sign">+</string>
     <string name="minus_sign">-</string>
     <string name="username">userName</string>
@@ -41,7 +41,7 @@
     <string name="please_try_later">Please try again later</string>
     <string name="user_failed">User creation failed!</string>
     <string name="game_end">GAME END!</string>
-    <string name="you_win">Congratulations You Won</string>
+    <string name="you_win">Congratulations You Won, your point is: </string>
     <string name="sign_on_header">SING ON</string>
     <string name="fragment_login">Login</string>
     <string name="feedback_numbers_list_header">FeedBack history</string>
@@ -53,4 +53,5 @@
     <string name="hold_a_number">Hold a number. I will try to guess and wait for your feedback. You can provide it in \"+\" for each digits in correct order and in \"-\" for each in wrong place</string>
 <string name="sign_out_description">Are you sure you want to sign out?</string>
     <string name="sign_out_title">Signing out!</string>
+    <string name="user_score">%1$s Score: %2$d</string>
 </resources>

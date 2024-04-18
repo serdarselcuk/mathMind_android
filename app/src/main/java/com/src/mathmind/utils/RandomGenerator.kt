@@ -1,7 +1,6 @@
 package com.src.mathmind.utils
 
 import android.util.Log
-import com.src.mathmind.service.LogTag
 import java.security.SecureRandom
 import java.util.Base64
 

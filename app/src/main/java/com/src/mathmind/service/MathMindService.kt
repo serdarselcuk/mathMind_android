@@ -1,5 +1,6 @@
 package com.src.mathmind.service
 
+import LocalDateAdapter
 import com.src.mathmind.models.ScoreModel
 import com.src.mathmind.models.UserModel
 import com.google.gson.GsonBuilder
@@ -12,13 +13,18 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
+import java.time.LocalDate
 
 object RetrofitClient {
     private const val BASE_URL = "http://192.168.1.58:8080/"
-    val gson = GsonBuilder().setLenient().create()
 
-    val okHttpClient = OkHttpClient()
-        .newBuilder()
+    val gson = GsonBuilder()
+        .setLenient()
+        .setDateFormat("yyyy-MM-dd")
+        .registerTypeAdapter(LocalDate::class.java, LocalDateAdapter())
+        .create()
+
+    val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(RequestInterceptor)
         .build()
 
@@ -38,20 +44,22 @@ object RequestInterceptor : Interceptor {
     }
 }
 
+
 interface MathMindService {
 
     @GET("/topScoreList")
-    fun getTopScoreList() : Call<List<ScoreModel>>
-    @POST("/score")
-    fun putScore(@Body user: ScoreModel):Call<ServiceResponse<String>>
+    fun getTopScoreList(): Call<List<ScoreModel>>
+
+    @POST("/score/save")
+    fun saveScore(@Body scoreModel: ScoreModel): Call<String>
 
     @POST("/user/validate")
-    fun validateUser(@Query("param_1") param1:String) : Call<Boolean>
+    fun validateUser(@Query("param_1") param1: String): Call<Boolean>
 
     @POST("/user/save")
-    fun saveUser(@Body user: UserModel):Call<String>
+    fun saveUser(@Body user: UserModel): Call<String>
 
     @GET("/user")
-    fun getUser(@Query("param_1") param_1: String):Call<ServiceResponse<UserModel>>
+    fun getUser(@Query("param_1") param_1: String): Call<ServiceResponse<UserModel>>
 
 }

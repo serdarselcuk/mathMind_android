@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.src.mathmind.models.GuessModel
-import com.src.mathmind.service.LogTag
+import com.src.mathmind.utils.LogTag
 import com.src.mathmind.utils.ERROR_CONSTANTS
 import com.src.mathmind.utils.Utility
 import kotlin.random.Random
@@ -93,7 +93,7 @@ class FeedBackerViewModel : ViewModel() {
         for (num in 1023..9876) {
             val numArray = Utility.numToArray(num)
             if (numArray.toSet().size == 4) {
-                val feedback = Utility.generateFeedBack(guessedNumberArray, numArray)
+                val feedback = Utility.generateFeedBack(guessedNumberArray, numArray, null)
                 if(feedback[0] == guessModel.placedNumber && feedback[1] == guessModel.notPlacedNumber)
                     possibleNumbers.add(num)
             }
@@ -107,14 +107,15 @@ class FeedBackerViewModel : ViewModel() {
         val numbersToRemove = mutableListOf<Int>()
         for (num in possibleNumbers) {
             val numArray = Utility.numToArray(num)
-            val feedback = Utility.generateFeedBack(guessedNumberArray, numArray)
+            val feedback = Utility.generateFeedBack(guessedNumberArray, numArray, null)
             if (feedback[0] != guessModel.placedNumber && feedback[1] != guessModel.notPlacedNumber)
                 numbersToRemove.add(num)
         }
         numbersToRemove.forEach {
             possibleNumbers.remove(it)
         }
-        Log.d(LogTag.FEEDBACKER_VIEW_MODEL,
+        Log.d(
+            LogTag.FEEDBACKER_VIEW_MODEL,
             "Possible number size: ${possibleNumbers.size}")
     }
 

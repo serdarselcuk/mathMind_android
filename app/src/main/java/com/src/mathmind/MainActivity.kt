@@ -4,10 +4,15 @@ import ShowDialog
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.forEach
+import androidx.core.view.forEachIndexed
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -16,9 +21,11 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import com.src.mathmind.databinding.ActivityMainBinding
-import com.src.mathmind.databinding.AppBarMainBinding
+import com.src.mathmind.service.CallService
 import com.src.mathmind.ui.login.LoginViewModel
+import com.src.mathmind.utils.ERROR_CONSTANTS
 import com.src.mathmind.utils.IdlingTool
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     private var showSignOutVisible = false
     private var idlingResource: IdlingTool? = null
     lateinit var navController: NavController
+    private lateinit var navView: NavigationView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,9 +44,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.appBarMain.toolbar)
 
-        val appBarMain: AppBarMainBinding = binding.appBarMain
         val drawerLayout: DrawerLayout = binding.drawerLayout
-        val navView: NavigationView = binding.navView
+        navView= binding.navView
         navController = findNavController(R.id.nav_login)
 
         appBarConfiguration = AppBarConfiguration(
@@ -62,10 +69,9 @@ class MainActivity : AppCompatActivity() {
                         }
                     )
                 }else if (currentDestination?.id == R.id.nav_login) {
-
+                    finish()
                 } else {
                     if (!navController.navigateUp()) {
-
                         finish()
                     }
                 }
@@ -76,13 +82,14 @@ class MainActivity : AppCompatActivity() {
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-//        scoreTopList = CallService().getScoreBoard()
-//        updateNavMenuForScoreboard()
-        navView.menu.add("1 - added to menu1")
-        navView.menu.add("1 - added to menu2")
-        navView.menu.add("1 - added to menu3")
-        navView.menu.add("1 - added to menu4")
+
+        navView.menu.add(" | User        | Days | Point")
+
+        updateScores()
+
     }
+
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 
@@ -123,15 +130,13 @@ class MainActivity : AppCompatActivity() {
         val currentDestination = navController.currentDestination
         return when (item.itemId) {
             R.id.action_sign_out -> {
-                if(currentDestination?.id == R.id.nav_guesser)
-                    logOut(R.id.action_nav_guesser_to_login)
-                else if(currentDestination?.id == R.id.nav_feedbacker)
-                    logOut(R.id.action_nav_feedbacker_to_login)
-                else
-                    logOut()
+                when (currentDestination?.id) {
+                    R.id.nav_guesser -> logOut(R.id.action_nav_guesser_to_login)
+                    R.id.nav_feedbacker -> logOut(R.id.action_nav_feedbacker_to_login)
+                    else -> logOut()
+                }
                 true
             }
-
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -142,6 +147,28 @@ class MainActivity : AppCompatActivity() {
         setShowSignOutVisible(false)
         navController.navigate(destination)
     }
+
+    fun updateScores() {
+        navView.menu.forEach { navView.menu.removeItem(it.itemId)}
+        lifecycleScope.launch {
+            CallService().getScoreBoardList(getIdlingTool()){ scoreModels ->
+                if (scoreModels != null)
+                    scoreModels.sortedBy { it.point }?.forEachIndexed { index, item ->
+                        navView.menu.add("${index + 1} | $item")
+                    }
+                else{
+                    navView.menu.add(ERROR_CONSTANTS.SERVICE_ERROR)
+                }
+            }
+        }
+    }
+
+    fun updateUserName(userName:String){
+        val header: View = navView.getHeaderView(0)
+        val userNameTextField = header.findViewById<TextView>(R.id.userNameTextField)
+        userNameTextField.text = userName
+    }
+
 }
 
 

@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
-import android.text.Highlights
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ListAdapter
 import android.widget.ListView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -26,6 +24,10 @@ import com.src.mathmind.R
 import com.src.mathmind.databinding.FragmentGuesserBinding
 import com.src.mathmind.databinding.ProgressBarBinding
 import com.src.mathmind.models.GuessModel
+import com.src.mathmind.models.ScoreModel
+import com.src.mathmind.service.CallService
+import com.src.mathmind.utils.ERROR_CONSTANTS
+import com.src.mathmind.utils.LogTag
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -33,11 +35,14 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
 
 class GuesserFragment : Fragment() {
 
     private var _binding: FragmentGuesserBinding? = null
 
+    private lateinit var scoreBoard:TextView
+    private lateinit var turnCountBoard:TextView
     private lateinit var digit_cell_1: EditText
     private lateinit var digit_cell_2: EditText
     private lateinit var digit_cell_3: EditText
@@ -47,12 +52,14 @@ class GuesserFragment : Fragment() {
     private lateinit var progressBar: ProgressBarBinding
     private lateinit var guessed_list_view: ListView
     private lateinit var guessNumberCells: Array<EditText>
+    private lateinit var userName: String
     var highlightingActive = false
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
     private lateinit var mainActivity: MainActivity
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is MainActivity) {
@@ -73,8 +80,11 @@ class GuesserFragment : Fragment() {
 
         _binding = FragmentGuesserBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        val sharedPreferences = context?.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+        userName = sharedPreferences?.getString("userName", null)?:"User"
         progressBar = binding.progressBar
-
+        scoreBoard = binding.scoreTextField
+        turnCountBoard = binding.turnCountBoard
         guessed_list_view = binding.guestureHistoryList
         guess_button = binding.guessingButton
         digit_cell_1 = binding.guessingNumber1
@@ -111,26 +121,34 @@ class GuesserFragment : Fragment() {
                 lifecycleScope.launch {
                     when (val result = guessViewModel.startEvaluation(numberArray)) {
                         is Int -> {
-                            context?.let { it1 ->
-                                guessViewModel.updateGuessCount(
-                                    it1,
-                                    guesser_header
-                                )
+                            guessViewModel.getGuessCount().run {  updateTurn(this) }
+                            guessViewModel.score.value.let {
+                                if (it != null) {
+                                    updateScore(it.getPoint())
+                                }
                             }
                             guessHistoryAdapter?.notifyDataSetChanged()
                         }
 
                         is GuessModel -> highlightValues(result)
-                        null -> endGame()
+                        null -> {
+                            if(!guessViewModel.saveScore(mainActivity.getIdlingTool(), userName)){
+                                showErrorDialog()
+                            }
+                            endGame(guessViewModel.score.value!!.getPoint())
+                        }
                     }
+                    progressBar.progressBar.visibility = View.GONE
                 }
                 if(!highlightingActive) for(cell in guessNumberCells) cell.text.clear()
                 else highlightingActive = false
                 digit_cell_1.requestFocus()
             }
-            progressBar.progressBar.visibility = View.GONE
+
 
         }
+        updateScore(0)
+        updateTurn(0)
         return root
     }
 
@@ -280,19 +298,44 @@ class GuesserFragment : Fragment() {
 
     }
 
-    private fun endGame() {
-        ShowDialog().create(
-            requireContext(),
-            getString(R.string.game_end),
-            getString(R.string.you_win),
-            getString(android.R.string.ok),
-            null,
-            onPositiveClick = {
-                Log.d("Guesser", "Navigating to home")
-                findNavController().navigate(R.id.action_nav_guesser_to_nav_home)
-            }
-        )
-        println("game end")
+    private fun endGame(point:Int) {
+        val text = getString(R.string.you_win) +"$point"
+        context?.let {
+            ShowDialog().create(
+                it,
+                getString(R.string.game_end),
+                text,
+                getString(android.R.string.ok),
+                null,
+                onPositiveClick = {
+                    Log.d(LogTag.GUESSER_FRAGMENT, "Navigating to home")
+                    findNavController().navigate(R.id.action_nav_guesser_to_nav_home)
+                }
+            )
+        }
+        mainActivity.updateScores()
+        println("game end: $point")
+    }
+
+    private fun showErrorDialog() {
+
+        context?.let {
+            val showDialog = ShowDialog()
+            showDialog.create(
+                it,
+                ERROR_CONSTANTS.ERROR_HEADER,
+                ERROR_CONSTANTS.SCORE_SAVE_FAILURE,
+                getString(android.R.string.ok)
+            )
+        }
+    }
+
+    private fun updateScore(point: Int) {
+        scoreBoard.text = context?.getString(R.string.user_score, userName, point)
+    }
+
+    private fun updateTurn(count:Int){
+        turnCountBoard.text = context?.getString(R.string.turn_count, count )
     }
 
 }
