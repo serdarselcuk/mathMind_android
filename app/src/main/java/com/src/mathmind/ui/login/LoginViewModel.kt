@@ -71,10 +71,6 @@ class LoginViewModel : ViewModel() {
         return cryptPass == PasswordHasher.hashPassword(password, hash)
     }
 
-    fun setLoginViewState(state: LoginViewState.LoggedOut) {
-        _loginViewState.value = state
-    }
-
     fun setUserName(textView: TextView): LiveData<String> {
         if (textView.text.isBlank())
             textView.error = ERROR_CONSTANTS.PROVIDE_USER_NAME

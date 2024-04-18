@@ -1,6 +1,5 @@
 package com.src.mathmind.models
 
-import java.sql.Date
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.concurrent.TimeUnit
@@ -9,8 +8,8 @@ data class ScoreModel(
 
     val userName: String,
     val point: Int,
-    val date: LocalDate
-): Comparable<ScoreModel>{
+    val date: LocalDate,
+) : Comparable<ScoreModel> {
 
 
     fun calculateDaysPassed(): String {
@@ -24,7 +23,8 @@ data class ScoreModel(
 
     private fun getUserNamePrinted(): String {
         return if (userName.length > USER_NAME_LENGTH) userName.substring(0, USER_NAME_LENGTH)
-        else if (userName.length < USER_NAME_LENGTH) userName + SPACE.toString().repeat(USER_NAME_LENGTH - userName.length)
+        else if (userName.length < USER_NAME_LENGTH) userName + SPACE.toString()
+            .repeat(USER_NAME_LENGTH - userName.length)
         else userName
     }
 
@@ -45,7 +45,6 @@ data class ScoreModel(
         private const val SPACE = ' '
         private const val USER_NAME_LENGTH = 12
         private const val SCORE_LENGTH = 5
-        private const val ORDER_LENGTH = 2
         private const val DAYS_LENGTH = 5
     }
 }

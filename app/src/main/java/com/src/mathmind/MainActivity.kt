@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
-import androidx.core.view.forEachIndexed
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -45,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.appBarMain.toolbar)
 
         val drawerLayout: DrawerLayout = binding.drawerLayout
-        navView= binding.navView
+        navView = binding.navView
         navController = findNavController(R.id.nav_login)
 
         appBarConfiguration = AppBarConfiguration(
@@ -68,7 +67,7 @@ class MainActivity : AppCompatActivity() {
                             logOut()
                         }
                     )
-                }else if (currentDestination?.id == R.id.nav_login) {
+                } else if (currentDestination?.id == R.id.nav_login) {
                     finish()
                 } else {
                     if (!navController.navigateUp()) {
@@ -88,7 +87,6 @@ class MainActivity : AppCompatActivity() {
         updateScores()
 
     }
-
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -137,6 +135,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -149,21 +148,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun updateScores() {
-        navView.menu.forEach { navView.menu.removeItem(it.itemId)}
+        navView.menu.forEach { navView.menu.removeItem(it.itemId) }
         lifecycleScope.launch {
-            CallService().getScoreBoardList(getIdlingTool()){ scoreModels ->
+            CallService().getScoreBoardList(getIdlingTool()) { scoreModels ->
                 if (scoreModels != null)
-                    scoreModels.sortedBy { it.point }?.forEachIndexed { index, item ->
+                    scoreModels.sortedBy { it.point }.forEachIndexed { index, item ->
                         navView.menu.add("${index + 1} | $item")
                     }
-                else{
+                else {
                     navView.menu.add(ERROR_CONSTANTS.SERVICE_ERROR)
                 }
             }
         }
     }
 
-    fun updateUserName(userName:String){
+    fun updateUserName(userName: String) {
         val header: View = navView.getHeaderView(0)
         val userNameTextField = header.findViewById<TextView>(R.id.userNameTextField)
         userNameTextField.text = userName

@@ -1,6 +1,5 @@
 package com.src.mathmind.ui.guesser
 
-import android.content.SharedPreferences
 import android.widget.EditText
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -21,8 +20,6 @@ class GuessViewModel : ViewModel() {
     val guessed_number_list: LiveData<MutableList<GuessModel>> = _guessed_number_list
     private val _score = MutableLiveData<ScoreCalculus>().apply { value = ScoreCalculus() }
     val score: LiveData<ScoreCalculus> = _score
-    private val _position = MutableLiveData<MutableList<Char>>().apply { value = mutableListOf('*','*','*','*') }
-    val position: LiveData<MutableList<Char>> = _position
 
     // Generate a random number for guessing
     private val numberKept = RandomGenerator().generateRandomUniqueDigits(4)
@@ -48,7 +45,7 @@ class GuessViewModel : ViewModel() {
     }
 
     // Function to update the count of guessed numbers
-    fun getGuessCount():Int {
+    fun getGuessCount(): Int {
         return guessed_number_list.value?.size ?: 0
     }
 
@@ -79,14 +76,14 @@ class GuessViewModel : ViewModel() {
         }
     }
 
-    fun saveScore(idlingTool: IdlingTool, userName:String?):Boolean {
+    fun saveScore(idlingTool: IdlingTool, userName: String?): Boolean {
 
-        return if( userName != null ) {
+        return if (userName != null) {
             score.value?.let { ScoreModel(userName, it.getPoint(), LocalDate.now()) }?.let {
                 CallService().saveScore(it, idlingTool)
             }
             true
-        }else{
+        } else {
             false
         }
     }
@@ -94,13 +91,13 @@ class GuessViewModel : ViewModel() {
 }
 
 data class ScoreCalculus(
-    var turn:Int = 0,
+    var turn: Int = 0,
     var point: Double = 0.0,
-    var position: MutableList<Boolean?> = MutableList(4){null}
-){
+    var position: MutableList<Boolean?> = MutableList(4) { null },
+) {
 
     fun setGameEndPoint() {
-        if (turn < 15) point += ((15 - turn) * 100 )
+        if (turn < 15) point += ((15 - turn) * 100)
         if (turn > 20) point -= (turn - 20)
     }
 
@@ -108,14 +105,14 @@ data class ScoreCalculus(
    true is indicating correct position
    false stands for wrong positioned digits
     */
-    fun setPositionalPoint(positionalInfo:Int, correctPosition:Boolean){
+    fun setPositionalPoint(positionalInfo: Int, correctPosition: Boolean) {
 
-        if(correctPosition) {
+        if (correctPosition) {
             if (position[positionalInfo] != true) {
                 point += (100 / turn)
                 this.position[positionalInfo] = true
             }
-        }else {
+        } else {
             if (position[positionalInfo] == null) {
                 point += (50 / turn)
                 this.position[positionalInfo] = false
@@ -123,12 +120,12 @@ data class ScoreCalculus(
         }
     }
 
-    fun increaseTurn():ScoreCalculus{
+    fun increaseTurn(): ScoreCalculus {
         turn++
         return this
     }
 
-    fun getPoint():Int{
+    fun getPoint(): Int {
         return point.toInt()
     }
 }
