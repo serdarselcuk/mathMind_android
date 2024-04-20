@@ -10,7 +10,6 @@ import com.src.mathmind.models.LoginViewState
 import com.src.mathmind.models.UserModel
 import com.src.mathmind.service.CallService
 import com.src.mathmind.utils.ERROR_CONSTANTS
-import com.src.mathmind.utils.IdlingTool
 import com.src.mathmind.utils.PasswordHasher
 import kotlinx.coroutines.launch
 import kotlin.coroutines.resume
@@ -29,9 +28,9 @@ class LoginViewModel : ViewModel() {
 
         viewModelScope.launch {
             try {
-                val user: UserModel? = userName.value?.let {it1 ->
-                    password.value?.let {it2 ->
-                       validateCredentials(it1, it2, callService)
+                val user: UserModel? = userName.value?.let { it1 ->
+                    password.value?.let { it2 ->
+                        validateCredentials(it1, it2, callService)
                     }
                 }
 
@@ -40,7 +39,8 @@ class LoginViewModel : ViewModel() {
                     // shared data can be accessed from any class
                     _loginViewState.value = LoginViewState.ValidationSuccess
                 } else {
-                    _loginViewState.value = LoginViewState.ValidationError(ERROR_CONSTANTS.CREDENTIALS_VALIDATION_FAILURE)
+                    _loginViewState.value =
+                        LoginViewState.ValidationError(ERROR_CONSTANTS.CREDENTIALS_VALIDATION_FAILURE)
                 }
             } catch (e: Exception) {
                 _loginViewState.value = LoginViewState.Error("Something went wrong")
@@ -48,14 +48,18 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    private suspend fun validateCredentials(userName: String, password: String, callService: CallService): UserModel? {
+    private suspend fun validateCredentials(
+        userName: String,
+        password: String,
+        callService: CallService,
+    ): UserModel? {
         val user: UserModel? = getUserValidated(userName, callService)
         val successLogin = user != null && validatePassword(user.password, password, user.hashCode)
         return if (successLogin) user
         else null
     }
 
-    private suspend fun getUserValidated(username: String,  callService: CallService): UserModel? {
+    private suspend fun getUserValidated(username: String, callService: CallService): UserModel? {
         return suspendCoroutine { continuation ->
             callService.getUser(username) { serviceResponse ->
                 println("${serviceResponse.data?.firstName} found")

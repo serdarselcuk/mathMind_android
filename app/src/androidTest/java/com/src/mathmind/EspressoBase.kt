@@ -8,9 +8,11 @@ import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
-import com.src.mathmind.tests.FeedBackerTests
 import com.src.mathmind.utils.LogTag
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -19,12 +21,11 @@ import org.hamcrest.core.AllOf
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
-import org.junit.Test
 
 open class EspressoBase {
 
-    private val userName:String = "use_2"
-    private val password:String = "Password1."
+    private val userName: String = "use_2"
+    private val password: String = "Password1."
 
     private lateinit var idlingResource: IdlingResource
 //    private lateinit var appContext: Context
@@ -97,7 +98,7 @@ open class EspressoBase {
     fun landOnFeedBacker() {
         onView(withId(R.id.feedbackerButton))
             .perform(ViewActions.click())
-            onView(withText("OK")).perform(ViewActions.click())
+        onView(withText("OK")).perform(ViewActions.click())
     }
 }
 

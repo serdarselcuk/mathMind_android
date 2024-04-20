@@ -2,10 +2,8 @@ package com.src.mathmind.tests
 
 import android.util.Log
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.src.mathmind.EspressoBase
@@ -15,7 +13,7 @@ import org.junit.Test
 
 class FeedBackerTests : EspressoBase() {
 
-    override fun setup(){
+    override fun setup() {
         super.setup()
         login()
         landOnFeedBacker()

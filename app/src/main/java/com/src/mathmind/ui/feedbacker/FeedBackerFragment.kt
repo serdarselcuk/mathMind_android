@@ -1,7 +1,6 @@
 package com.src.mathmind.ui.feedbacker
 
 import ShowDialog
-import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -14,14 +13,13 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.src.mathmind.MainActivity
 import com.src.mathmind.R
 import com.src.mathmind.databinding.FragmentFeedbackerBinding
 import com.src.mathmind.databinding.ProgressBarBinding
-import com.src.mathmind.utils.LogTag
 import com.src.mathmind.ui.guesser.GuestureHistoryAdapter
+import com.src.mathmind.utils.LogTag
 import com.src.mathmind.utils.RandomGenerator
 import kotlinx.coroutines.launch
 

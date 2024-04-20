@@ -9,7 +9,6 @@ import com.src.mathmind.models.GuessModel
 import com.src.mathmind.models.ScoreCalculus
 import com.src.mathmind.models.ScoreModel
 import com.src.mathmind.service.CallService
-import com.src.mathmind.utils.IdlingTool
 import com.src.mathmind.utils.RandomGenerator
 import com.src.mathmind.utils.Utility
 import java.time.LocalDate
@@ -58,7 +57,7 @@ class GuessViewModel : ViewModel() {
             Utility.arrayToNum(numberArray), // guessed number
             FeedBackData(
                 0,//correctly placed number
-            0 // numbers on wrong place
+                0 // numbers on wrong place
             )
         )
         // Ensure _guessed_number_list is not null

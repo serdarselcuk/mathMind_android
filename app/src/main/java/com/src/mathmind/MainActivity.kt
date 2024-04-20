@@ -2,7 +2,6 @@ package com.src.mathmind
 
 import ShowDialog
 import android.os.Bundle
-import android.telecom.Call
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -15,7 +14,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -122,13 +120,13 @@ class MainActivity : AppCompatActivity() {
         return idlingResource as IdlingTool
     }
 
-    fun setShowSignOutVisible(boolean: Boolean):Boolean {
+    fun setShowSignOutVisible(boolean: Boolean): Boolean {
         return try {
             showSignOutVisible = boolean
             invalidateOptionsMenu()
             true
-        }catch (t: Throwable){
-            Log.d("","sign out button visibility could not be able to set for $boolean")
+        } catch (t: Throwable) {
+            Log.d("", "sign out button visibility could not be able to set for $boolean")
             false
         }
     }
@@ -172,12 +170,13 @@ class MainActivity : AppCompatActivity() {
                 }
 
             }
+
             else -> super.onOptionsItemSelected(item)
         }
         return result
     }
 
-    private fun logOut():Boolean {
+    private fun logOut(): Boolean {
         val loginViewModel = ViewModelProvider(this)[LoginViewModel::class.java]
         return loginViewModel.clear() && setShowSignOutVisible(false)
     }
@@ -185,7 +184,7 @@ class MainActivity : AppCompatActivity() {
     fun updateScores() {
         navView.menu.forEach { navView.menu.removeItem(it.itemId) }
         lifecycleScope.launch {
-            callService().getScoreBoardList{ scoreModels ->
+            callService().getScoreBoardList { scoreModels ->
                 if (scoreModels != null)
                     scoreModels.sortedBy { it.point }.forEachIndexed { index, item ->
                         navView.menu.add("${index + 1} | $item")
@@ -203,7 +202,7 @@ class MainActivity : AppCompatActivity() {
         userNameTextField.text = userName
     }
 
-    fun callService():CallService{
+    fun callService(): CallService {
         idlingResource?.setIdleState(true)
         return CallService.getInstance(getIdlingTool())
     }
