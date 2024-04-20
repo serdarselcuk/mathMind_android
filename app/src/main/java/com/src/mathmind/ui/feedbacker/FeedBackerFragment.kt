@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.src.mathmind.MainActivity
 import com.src.mathmind.R
 import com.src.mathmind.databinding.FragmentFeedbackerBinding
@@ -133,7 +134,7 @@ class FeedBackerFragment : Fragment() {
 
     private fun setClickListeners(button: Button) {
         button.setOnClickListener {
-            Log.d(LogTag.FEEDBACKER_FRAGMENT, "button click captured${it.id}")
+            Log.d(LogTag.FEEDBACKER_FRAGMENT, "button click captured ${it.id}")
             when (it.id) {
                 R.id.plus_button -> {
                     lifecycleScope.launch {
@@ -177,9 +178,7 @@ class FeedBackerFragment : Fragment() {
                         is FeedBackerViewState.NEW -> {
                             viewLifecycleOwner.lifecycleScope.launch {
                                 feedBackerViewModel.guessNumber(
-                                    RandomGenerator().generateRandomUniqueDigits(
-                                        4
-                                    )
+                                    RandomGenerator().generateRandomUniqueDigits(4)
                                 )
                                 updateGuessNumberView(feedBackerViewModel.guessNum.value)
                             }
@@ -219,24 +218,21 @@ class FeedBackerFragment : Fragment() {
         _binding = null
     }
 
-    private fun showDialog(title: String, message: String, navigate: Int) {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle(title)
-            .setMessage(message)
-            .setPositiveButton(getString(R.string.OK_BUTTON)) { dialog, _ ->
-                dialog.dismiss()
-                view?.findNavController()?.navigate(navigate)
-            }
-        val dialog = builder.create()
-        dialog.show()
-    }
 
     private fun endGame() {
-        showDialog(
-            getString(R.string.game_end),
-            getString(R.string.you_win),
-            R.id.action_nav_feedbacker_to_nav_home
-        )
+        context?.let {
+            ShowDialog().create(
+                it,
+                getString(R.string.game_end),
+                getString(R.string.i_win),
+                getString(android.R.string.ok),
+                onPositiveClick = {
+                    findNavController().navigate(
+                        R.id.action_nav_feedbacker_to_nav_home
+                    )
+                }
+            )
+        }
         println("game end")
     }
 

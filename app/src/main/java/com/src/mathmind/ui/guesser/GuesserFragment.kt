@@ -26,6 +26,7 @@ import com.src.mathmind.databinding.ProgressBarBinding
 import com.src.mathmind.models.GuessModel
 import com.src.mathmind.utils.ERROR_CONSTANTS
 import com.src.mathmind.utils.LogTag
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -129,20 +130,18 @@ class GuesserFragment : Fragment() {
 
                         is GuessModel -> highlightValues(result)
                         null -> {
-                            if (!guessViewModel.saveScore(mainActivity.getIdlingTool(), userName)) {
+                            if (!guessViewModel.saveScore(mainActivity.callService(), userName)) {
                                 showErrorDialog()
                             }
                             endGame(guessViewModel.score.value!!.getPoint())
                         }
                     }
-                    progressBar.progressBar.visibility = View.GONE
                 }
                 if (!highlightingActive) for (cell in guessNumberCells) cell.text.clear()
                 else highlightingActive = false
                 digit_cell_1.requestFocus()
             }
-
-
+            progressBar.progressBar.visibility = View.GONE
         }
         updateScore(0)
         updateTurn(0)
@@ -169,11 +168,20 @@ class GuesserFragment : Fragment() {
             }
         }
 
-        // Wait for all highlight coroutines to complete
         lifecycleScope.launch {
-            highlightTasks.awaitAll()
-            // After all highlighting is done, clear the text content of digit cells
-            clearDigitCells()
+            // Increment the IdlingResource count before starting the asynchronous operation
+            mainActivity.getIdlingTool().setIdleState(false)
+
+            // Launch the coroutine on a background thread
+            CoroutineScope(Dispatchers.Default).launch {
+                highlightTasks.awaitAll()
+
+                // After all highlighting is done, clear the text content of digit cells
+                clearDigitCells()
+
+                // Decrement the IdlingResource count after the asynchronous operation is complete
+                mainActivity.getIdlingTool().setIdleState(true)
+            }
         }
     }
 
@@ -295,12 +303,12 @@ class GuesserFragment : Fragment() {
     }
 
     private fun endGame(point: Int) {
-        val text = getString(R.string.you_win) + "$point"
+
         context?.let {
             ShowDialog().create(
                 it,
                 getString(R.string.game_end),
-                text,
+                getString(R.string.you_win,point),
                 getString(android.R.string.ok),
                 null,
                 onPositiveClick = {

@@ -42,8 +42,8 @@ class GuestureHistoryAdapter(private val context: Context, private val guessList
             text = "" }
 
         guessedNumberTextView.text = currentItem.guessedNumber.toString()
-        placedNumberTextView.text = currentItem.placedNumber.toString()
-        notPlacedNumberTextView.text = currentItem.notPlacedNumber.toString()
+        placedNumberTextView.text = currentItem.feedBackData.placedNumber.toString()
+        notPlacedNumberTextView.text = currentItem.feedBackData.nonPlacedNumber.toString()
 
         return convertView
     }

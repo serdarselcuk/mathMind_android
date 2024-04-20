@@ -2,8 +2,7 @@ package com.src.mathmind.models
 
 data class GuessModel(
     val guessedNumber: Int,
-    var placedNumber: Int,
-    var notPlacedNumber: Int,
+    val feedBackData: FeedBackData
 ) {
     override fun equals(other: Any?): Boolean {
         return other is GuessModel && other.guessedNumber == this.guessedNumber
@@ -12,14 +11,14 @@ data class GuessModel(
     override fun toString(): String {
         return "GuessModel:" +
                 "\n\tguessedNumber: $guessedNumber" +
-                " \n\tplacedNumber: $placedNumber" +
-                " \n\tnotPlacedNumber: $notPlacedNumber"
+                " \n\tplacedNumber: ${feedBackData.placedNumber}" +
+                " \n\tnotPlacedNumber: ${feedBackData.nonPlacedNumber}"
     }
 
     override fun hashCode(): Int {
         var result = guessedNumber
-        result = 31 * result + placedNumber
-        result = 31 * result + notPlacedNumber
+        result = 31 * result + feedBackData.placedNumber
+        result = 31 * result + feedBackData.nonPlacedNumber
         return result
     }
 }

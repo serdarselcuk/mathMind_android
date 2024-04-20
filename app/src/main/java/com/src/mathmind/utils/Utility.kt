@@ -1,7 +1,8 @@
 package com.src.mathmind.utils
 
+import com.src.mathmind.models.FeedBackData
 import com.src.mathmind.models.GuessModel
-import com.src.mathmind.ui.guesser.ScoreCalculus
+import com.src.mathmind.models.ScoreCalculus
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.regex.Pattern
@@ -77,9 +78,9 @@ class Utility {
         * placed number , not_placed number
         * also updating data
         * */
-        fun evaluateNumber(numberKept: Int, data: GuessModel, scoreCalculus: ScoreCalculus? = null):MutableList<Int> {
-            val feedBack: Array<Int> = if (data.guessedNumber == numberKept) {
-                arrayOf(4,0)
+        fun evaluateNumber(numberKept: Int, data: GuessModel, scoreCalculus: ScoreCalculus? = null):FeedBackData {
+            val feedBack = if (data.guessedNumber == numberKept) {
+                FeedBackData(4,0)
             } else {
                 generateFeedBack(
                     numToArray(numberKept),
@@ -87,28 +88,27 @@ class Utility {
                     scoreCalculus
                 )
             }
-            data.placedNumber = feedBack[0]
-            data.notPlacedNumber = feedBack[1]
+            data.feedBackData.placedNumber = feedBack.placedNumber
+            data.feedBackData.nonPlacedNumber = feedBack.nonPlacedNumber
 
-            return mutableListOf( feedBack[0], feedBack[1] )
+            return feedBack
         }
 
-        fun generateFeedBack(keptNumArray:List<Int>, numToCompare:List<Int>, scoreCalculus: ScoreCalculus?): Array<Int>{
-            var placedNumber = 0
-            var notPlacedNumber = 0
+        fun generateFeedBack(keptNumArray:List<Int>, numToCompare:List<Int>, scoreCalculus: ScoreCalculus?): FeedBackData{
+            val feedback = FeedBackData(0,0)
 
             numToCompare.forEachIndexed{index,digit->
                 if (keptNumArray[index] == digit) {
                     scoreCalculus?.setPositionalPoint(index, true)
-                    placedNumber++
+                    feedback.placedNumber++
                 } else if (keptNumArray.contains(digit)) {
                     val positionOfDigit = keptNumArray.indexOf(digit)
                     scoreCalculus?.setPositionalPoint(positionOfDigit, false)
-                    notPlacedNumber++
+                    feedback.nonPlacedNumber++
                 }
             }
 
-            return arrayOf(placedNumber, notPlacedNumber)
+            return feedback
         }
 
     }

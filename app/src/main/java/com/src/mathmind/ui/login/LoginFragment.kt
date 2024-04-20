@@ -54,11 +54,10 @@ class LoginFragment : Fragment() {
         logInButton.setOnClickListener {
             val userName: String? = viewModel.setUserName(userNameField).value
             val password: String? = viewModel.setPassword(passwordField).value
-            if (
-                !userName.isNullOrEmpty() && !password.isNullOrEmpty()
-            ) {
+
+            if (!userName.isNullOrEmpty() && !password.isNullOrEmpty()) {
                 progressBar.progressBar.visibility = View.VISIBLE
-                viewModel.validateUser(mainActivity.getIdlingTool(), sharedPreferences)
+                viewModel.validateUser(mainActivity.callService(), sharedPreferences)
             }
         }
 

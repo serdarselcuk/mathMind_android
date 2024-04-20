@@ -1,20 +1,53 @@
 package com.src.mathmind
 
+import android.util.Log
 import android.view.View
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.rules.ActivityScenarioRule
+import com.src.mathmind.tests.FeedBackerTests
+import com.src.mathmind.utils.LogTag
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
 import org.hamcrest.core.AllOf
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
 
 open class EspressoBase {
 
     private val userName:String = "use_2"
     private val password:String = "Password1."
+
+    private lateinit var idlingResource: IdlingResource
+//    private lateinit var appContext: Context
+
+    @get:Rule
+    var activityRule = ActivityScenarioRule(MainActivity::class.java)
+
+    @Before
+    open fun setup() {
+        activityRule.scenario.onActivity { activity ->
+            idlingResource = activity.getIdlingTool()
+            // To prove that the test fails, omit this call:
+            IdlingRegistry.getInstance().register(idlingResource)
+        }
+
+        Log.d(LogTag.UI_TEST, "Setup")
+    }
+
+    @After
+    fun tearsDown() {
+        Log.d(LogTag.UI_TEST, "closing")
+        IdlingRegistry.getInstance().unregister(idlingResource)
+    }
 
     fun validateDisplayedWithText(onView: Matcher<View?>, text: String): ViewInteraction {
         return onView(onView)
@@ -34,17 +67,15 @@ open class EspressoBase {
         val digits = number.map { it.toString() }
         require(digits.size == 4) { "Number must be a 4-digit." }
 
-        val numberIds = arrayOf(
+        arrayOf(
             R.id.guessing_number_1,
             R.id.guessing_number_2,
             R.id.guessing_number_3,
             R.id.guessing_number_4
-        )
-
-        numberIds.forEachIndexed { index, id ->
+        ).forEachIndexed { index, id ->
             onView(withId(id)).perform(ViewActions.typeText(digits[index]))
         }
-
+//  click on Guess button
         onView(withId(R.id.guessing_button))
             .perform(ViewActions.click())
     }

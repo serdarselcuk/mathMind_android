@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.src.mathmind.models.FeedBackData
 import com.src.mathmind.models.GuessModel
 import com.src.mathmind.utils.LogTag
 import com.src.mathmind.utils.ERROR_CONSTANTS
@@ -31,6 +32,8 @@ class FeedBackerViewModel : ViewModel() {
     private val _feedBackHistory =
         MutableLiveData<MutableList<GuessModel>>().apply { value = mutableListOf() }
     val feedBackHistory: LiveData<MutableList<GuessModel>> = _feedBackHistory
+
+    private val _numbersHistory : MutableMap<Int, MutableList<Int>> = mutableMapOf()
 
     private val _feedBackStatus = MutableLiveData<FeedBackerViewState>()
         .apply { value = FeedBackerViewState.NEW }
@@ -76,7 +79,7 @@ class FeedBackerViewModel : ViewModel() {
     fun guessNumber() {
         val guessModel = feedBackHistory.value?.lastIndex?.let { feedBackHistory.value?.get(it) }
         if (guessModel is GuessModel) {
-            if (guessModel.placedNumber == 4) {
+            if (guessModel.feedBackData.placedNumber == 4) {
                 setStatus(FeedBackerViewState.END)
                 return
             }
@@ -94,7 +97,7 @@ class FeedBackerViewModel : ViewModel() {
             val numArray = Utility.numToArray(num)
             if (numArray.toSet().size == 4) {
                 val feedback = Utility.generateFeedBack(guessedNumberArray, numArray, null)
-                if(feedback[0] == guessModel.placedNumber && feedback[1] == guessModel.notPlacedNumber)
+                if(feedback == guessModel.feedBackData)
                     possibleNumbers.add(num)
             }
         }
@@ -105,15 +108,15 @@ class FeedBackerViewModel : ViewModel() {
         Log.d(LogTag.FEEDBACKER_VIEW_MODEL, "Possible number size: ${possibleNumbers.size}")
         val guessedNumberArray = Utility.numToArray(guessModel.guessedNumber)
         val numbersToRemove = mutableListOf<Int>()
-        for (num in possibleNumbers) {
-            val numArray = Utility.numToArray(num)
-            val feedback = Utility.generateFeedBack(guessedNumberArray, numArray, null)
-            if (feedback[0] != guessModel.placedNumber && feedback[1] != guessModel.notPlacedNumber)
-                numbersToRemove.add(num)
+        for (possibleNum in possibleNumbers) {
+            val possibleNumArray = Utility.numToArray(possibleNum)
+            val feedback = Utility.generateFeedBack(possibleNumArray, guessedNumberArray, null)
+            if (feedback != guessModel.feedBackData)
+                numbersToRemove.add(possibleNum)
         }
-        numbersToRemove.forEach {
-            possibleNumbers.remove(it)
-        }
+
+        possibleNumbers.removeAll(numbersToRemove)
+        _numbersHistory[guessModel.guessedNumber] = numbersToRemove
         Log.d(
             LogTag.FEEDBACKER_VIEW_MODEL,
             "Possible number size: ${possibleNumbers.size}")
@@ -139,8 +142,10 @@ class FeedBackerViewModel : ViewModel() {
         _feedBackHistory.value?.add(
             GuessModel(
                 guessNum.value!!,
-                plus.value!!,
-                minus.value!!
+                FeedBackData(
+                    plus.value!!,
+                    minus.value!!
+                )
             )
         )
     }

@@ -13,7 +13,6 @@ import com.src.mathmind.utils.ERROR_CONSTANTS
 import com.src.mathmind.utils.IdlingTool
 import com.src.mathmind.utils.PasswordHasher
 import kotlinx.coroutines.launch
-import java.util.Date
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -25,16 +24,14 @@ class LoginViewModel : ViewModel() {
     val password: LiveData<String> = _password
     private val _loginViewState = MutableLiveData<LoginViewState>()
     val loginViewState: LiveData<LoginViewState> = _loginViewState
-    private val mockUser = UserModel(1, "ss", Date(System.currentTimeMillis()).toString(), "","","","","")
 
-    fun validateUser(idlingTool: IdlingTool?, sharedEdit: SharedPreferences?) {
+    fun validateUser(callService: CallService, sharedEdit: SharedPreferences?) {
 
         viewModelScope.launch {
             try {
-                val user: UserModel? = if(userName.value == "ss") mockUser
-                else userName.value?.let {userName_ ->
-                    password.value?.let {password_ ->
-                       validateCredentials(userName_, password_, idlingTool)
+                val user: UserModel? = userName.value?.let {it1 ->
+                    password.value?.let {it2 ->
+                       validateCredentials(it1, it2, callService)
                     }
                 }
 
@@ -51,16 +48,16 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    private suspend fun validateCredentials(userName: String, password: String, idlingTool: IdlingTool?): UserModel? {
-        val user: UserModel? = getUserValidated(userName, idlingTool)
+    private suspend fun validateCredentials(userName: String, password: String, callService: CallService): UserModel? {
+        val user: UserModel? = getUserValidated(userName, callService)
         val successLogin = user != null && validatePassword(user.password, password, user.hashCode)
         return if (successLogin) user
         else null
     }
 
-    private suspend fun getUserValidated(username: String,  idlingtool: IdlingTool?): UserModel? {
+    private suspend fun getUserValidated(username: String,  callService: CallService): UserModel? {
         return suspendCoroutine { continuation ->
-            CallService().getUser(username, idlingtool) { serviceResponse ->
+            callService.getUser(username) { serviceResponse ->
                 println("${serviceResponse.data?.firstName} found")
                 continuation.resume(serviceResponse.data)
             }
@@ -81,16 +78,18 @@ class LoginViewModel : ViewModel() {
 
     fun setPassword(textView: TextView): LiveData<String> {
         if (textView.text.isBlank())
-            textView.error = ERROR_CONSTANTS.PROVIDE_USER_NAME
+            textView.error = ERROR_CONSTANTS.PROVIDE_PASSWORD
         else
             _password.value = textView.text.toString()
         return password
     }
 
-    fun clear(){
+    fun clear(): Boolean {
         _userName.value = ""
         _password.value = ""
         _loginViewState.value = LoginViewState.LoggedOut
+
+        return userName.value == null && password.value == null && _loginViewState.value is LoginViewState.LoggedOut
     }
 
 }

@@ -2,6 +2,8 @@ package com.src.mathmind
 
 import ShowDialog
 import android.os.Bundle
+import android.telecom.Call
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -13,6 +15,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -24,6 +27,7 @@ import com.src.mathmind.service.CallService
 import com.src.mathmind.ui.login.LoginViewModel
 import com.src.mathmind.utils.ERROR_CONSTANTS
 import com.src.mathmind.utils.IdlingTool
+import com.src.mathmind.utils.LogTag
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -118,39 +122,70 @@ class MainActivity : AppCompatActivity() {
         return idlingResource as IdlingTool
     }
 
-    fun setShowSignOutVisible(boolean: Boolean) {
-        showSignOutVisible = boolean
-        invalidateOptionsMenu()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle item selection.
-        val currentDestination = navController.currentDestination
-        return when (item.itemId) {
-            R.id.action_sign_out -> {
-                when (currentDestination?.id) {
-                    R.id.nav_guesser -> logOut(R.id.action_nav_guesser_to_login)
-                    R.id.nav_feedbacker -> logOut(R.id.action_nav_feedbacker_to_login)
-                    else -> logOut()
-                }
-                true
-            }
-
-            else -> super.onOptionsItemSelected(item)
+    fun setShowSignOutVisible(boolean: Boolean):Boolean {
+        return try {
+            showSignOutVisible = boolean
+            invalidateOptionsMenu()
+            true
+        }catch (t: Throwable){
+            Log.d("","sign out button visibility could not be able to set for $boolean")
+            false
         }
     }
 
-    private fun logOut(destination: Int = R.id.action_nav_home_to_login) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        var result = false
+        // Handle item selection.
+        val currentDestination = navController.currentDestination
+        when (item.itemId) {
+            R.id.action_sign_out -> {
+                var destination: Int? = null
+                ShowDialog().create(
+                    this,
+                    "Signing Out",
+                    "Are you sure you want to log off?",
+                    "Yes",
+                    "No",
+                    onPositiveClick = {
+
+                        destination = when (currentDestination?.id) {
+                            R.id.nav_guesser -> {
+                                R.id.action_nav_guesser_to_login
+                            }
+
+                            R.id.nav_feedbacker -> {
+                                R.id.action_nav_feedbacker_to_login
+                            }
+
+                            else -> {
+                                R.id.action_nav_home_to_login
+                            }
+                        }
+                    }
+                )
+                result = try {
+                    destination?.let { navController.navigate(it) }
+                    logOut()
+                } catch (t: Throwable) {
+                    Log.d(LogTag.MAIN_ACTIVITY, "Log out could not be realized")
+                    false
+                }
+
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+        return result
+    }
+
+    private fun logOut():Boolean {
         val loginViewModel = ViewModelProvider(this)[LoginViewModel::class.java]
-        loginViewModel.clear()
-        setShowSignOutVisible(false)
-        navController.navigate(destination)
+        return loginViewModel.clear() && setShowSignOutVisible(false)
     }
 
     fun updateScores() {
         navView.menu.forEach { navView.menu.removeItem(it.itemId) }
         lifecycleScope.launch {
-            CallService().getScoreBoardList(getIdlingTool()) { scoreModels ->
+            callService().getScoreBoardList{ scoreModels ->
                 if (scoreModels != null)
                     scoreModels.sortedBy { it.point }.forEachIndexed { index, item ->
                         navView.menu.add("${index + 1} | $item")
@@ -166,6 +201,11 @@ class MainActivity : AppCompatActivity() {
         val header: View = navView.getHeaderView(0)
         val userNameTextField = header.findViewById<TextView>(R.id.userNameTextField)
         userNameTextField.text = userName
+    }
+
+    fun callService():CallService{
+        idlingResource?.setIdleState(true)
+        return CallService.getInstance(getIdlingTool())
     }
 
 }

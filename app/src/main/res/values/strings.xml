@@ -41,7 +41,8 @@
     <string name="please_try_later">Please try again later</string>
     <string name="user_failed">User creation failed!</string>
     <string name="game_end">GAME END!</string>
-    <string name="you_win">Congratulations You Won, your point is: </string>
+    <string name="you_win">Congratulations You Won, your point is: %1$d</string>
+    <string name="i_win">Thanks for playing: </string>
     <string name="sign_on_header">SING ON</string>
     <string name="fragment_login">Login</string>
     <string name="feedback_numbers_list_header">FeedBack history</string>

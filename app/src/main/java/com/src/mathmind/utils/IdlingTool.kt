@@ -1,5 +1,6 @@
 package com.src.mathmind.utils
 
+import android.util.Log
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.IdlingResource.ResourceCallback
 import java.util.concurrent.atomic.AtomicBoolean
@@ -31,6 +32,7 @@ class IdlingTool: IdlingResource {
      * @param isIdleNow false if there are pending operations, true if idle.
      */
     fun setIdleState(isIdleNow: Boolean) {
+        Log.d("ss", "is idle setting: $isIdleNow")
         mIsIdleNow.set(isIdleNow)
         if (isIdleNow && mCallback != null) {
             mCallback!!.onTransitionToIdle()

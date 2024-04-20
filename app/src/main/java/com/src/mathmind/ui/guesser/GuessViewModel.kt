@@ -4,7 +4,9 @@ import android.widget.EditText
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.src.mathmind.models.FeedBackData
 import com.src.mathmind.models.GuessModel
+import com.src.mathmind.models.ScoreCalculus
 import com.src.mathmind.models.ScoreModel
 import com.src.mathmind.service.CallService
 import com.src.mathmind.utils.IdlingTool
@@ -51,10 +53,13 @@ class GuessViewModel : ViewModel() {
 
     // Function to start the evaluation of guessed numbers
     fun startEvaluation(numberArray: IntArray): Any? {
+
         val data = GuessModel(
             Utility.arrayToNum(numberArray), // guessed number
-            0,//correctly placed number
+            FeedBackData(
+                0,//correctly placed number
             0 // numbers on wrong place
+            )
         )
         // Ensure _guessed_number_list is not null
         if (guessed_number_list.value == null) _guessed_number_list.value = mutableListOf()
@@ -66,7 +71,7 @@ class GuessViewModel : ViewModel() {
         score.value?.increaseTurn()
         // decide about feedback & update data object
         Utility.evaluateNumber(numberKept, data, score.value)
-        return if (data.placedNumber == 4) {// if all numbers matches will return null
+        return if (data.feedBackData.placedNumber == 4) {// if all numbers matches will return null
 //            update game end score
             guessed_number_list.value?.let { score.value?.setGameEndPoint() }
             null
@@ -76,11 +81,11 @@ class GuessViewModel : ViewModel() {
         }
     }
 
-    fun saveScore(idlingTool: IdlingTool, userName: String?): Boolean {
+    fun saveScore(callService: CallService, userName: String?): Boolean {
 
         return if (userName != null) {
             score.value?.let { ScoreModel(userName, it.getPoint(), LocalDate.now()) }?.let {
-                CallService().saveScore(it, idlingTool)
+                callService.saveScore(it)
             }
             true
         } else {
@@ -90,42 +95,3 @@ class GuessViewModel : ViewModel() {
 
 }
 
-data class ScoreCalculus(
-    var turn: Int = 0,
-    var point: Double = 0.0,
-    var position: MutableList<Boolean?> = MutableList(4) { null },
-) {
-
-    fun setGameEndPoint() {
-        if (turn < 15) point += ((15 - turn) * 100)
-        if (turn > 20) point -= (turn - 20)
-    }
-
-    /*
-   true is indicating correct position
-   false stands for wrong positioned digits
-    */
-    fun setPositionalPoint(positionalInfo: Int, correctPosition: Boolean) {
-
-        if (correctPosition) {
-            if (position[positionalInfo] != true) {
-                point += (100 / turn)
-                this.position[positionalInfo] = true
-            }
-        } else {
-            if (position[positionalInfo] == null) {
-                point += (50 / turn)
-                this.position[positionalInfo] = false
-            }
-        }
-    }
-
-    fun increaseTurn(): ScoreCalculus {
-        turn++
-        return this
-    }
-
-    fun getPoint(): Int {
-        return point.toInt()
-    }
-}

@@ -1,7 +1,8 @@
 package com.src.mathmind.ui.signOn
 
+import ShowDialog
 import android.accounts.AuthenticatorException
-import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,11 +21,8 @@ import com.src.mathmind.utils.ERROR_CONSTANTS
 import com.src.mathmind.utils.Utility.Companion.validatePassword
 import com.src.mathmind.utils.Utility.Companion.checkEmail
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import androidx.navigation.findNavController
+import com.src.mathmind.MainActivity
 import com.src.mathmind.databinding.ProgressBarBinding
-import com.src.mathmind.utils.IdlingTool
 import com.src.mathmind.utils.PasswordHasher
 import com.src.mathmind.utils.RandomGenerator
 import com.src.mathmind.utils.Utility.Companion.getCurrentDate
@@ -48,7 +46,8 @@ class SignOnFragment : Fragment() {
     private lateinit var password: String
     private var confirmPassword: Boolean = false
     private lateinit var progressBar: ProgressBarBinding
-    private lateinit var idlingResource: IdlingTool
+    private lateinit var mainActivity: MainActivity
+    private lateinit var callService: CallService
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,6 +68,7 @@ class SignOnFragment : Fragment() {
         cancelButton = binding.cancelButton
         val firstNameErrorInput = binding.firstNameErrorView
         val lastNameErrorInput = binding.lastNameErrorView
+        callService = mainActivity.callService()
 
         email=""
         password=""
@@ -95,6 +95,15 @@ class SignOnFragment : Fragment() {
         return root
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is MainActivity) {
+            mainActivity = context
+        } else {
+            throw IllegalStateException("LoginFragment must be attached to MainActivity")
+        }
+    }
+
     private fun addClickListener(view: Button) {
         view.requestFocus()
         when (view.id) {
@@ -119,10 +128,16 @@ class SignOnFragment : Fragment() {
                                     hashKey,
                                     hashed_password)
 
-                                showDialog(
-                                    getString(R.string.user_saved),
-                                    getString(R.string.please_login_with),
-                                    R.id.action_signOn_to_nav_login)
+                                context?.let { it1 ->
+                                    ShowDialog().create(
+                                        it1,
+                                        getString(R.string.user_saved),
+                                        getString(R.string.please_login_with),
+                                        onPositiveClick = {
+                                            findNavController().navigate(R.id.action_signOn_to_nav_login)
+                                        }
+                                    )
+                                }
 
                             }catch (e:Error){
                                 errorTextInput.text = e.message
@@ -132,10 +147,16 @@ class SignOnFragment : Fragment() {
                                 View.VISIBLE
 
                             }catch (e3: Exception){
-                                showDialog(
-                                    getString(R.string.user_failed),
-                                    getString(R.string.please_try_later),
-                                    R.id.action_signOn_to_nav_login)
+                                context?.let { it2 ->
+                                    ShowDialog().create(
+                                        it2,
+                                        getString(R.string.user_failed),
+                                        getString(R.string.please_try_later),
+                                        onPositiveClick = {
+                                            findNavController().navigate(R.id.action_signOn_to_nav_login)
+                                        }
+                                    )
+                                }
                             }finally {
                                 progressBar.progressBar.visibility = View.GONE
                             }
@@ -235,22 +256,20 @@ class SignOnFragment : Fragment() {
     }
 
     private fun addUserNameFocusListener(userNameInput: EditText) {
-        userNameInput.onFocusChangeListener = View.OnFocusChangeListener { _userName, hasFocus ->
+        userNameInput.onFocusChangeListener = View.OnFocusChangeListener { userNameField, hasFocus ->
             lifecycleScope.launch {
                 val userNameError: TextView = binding.userNameErrorView
-                val text = (_userName as EditText).text.toString()
+                val userNameFieldText = (userNameField as EditText).text.toString()
                 if (!hasFocus) {
-                    CallService().validateUserName(text,getIdlingResource()) { userExists ->
+                    callService.validateUserName(userNameFieldText) { userExists ->
                         if (userExists != null) {
-                            println("userExists in callback ${userExists}")
                             if (userExists) userNameError.text = ERROR_CONSTANTS.USER_EXISTS
                             else {
-                                userName = text
+                                userName = userNameFieldText
                             }
                         } else {
                             errorTextInput.text = ERROR_CONSTANTS.SERVICE_ERROR
                             // Handle the case where an error occurred
-                            println(ERROR_CONSTANTS.SERVICE_ERROR)
                         }
                     }
                 } else {
@@ -264,7 +283,7 @@ class SignOnFragment : Fragment() {
 
     private fun createUser(date: String, hash: String, hashedPassword: String) {
 
-        return CallService().saveUser(
+        return callService.saveUser(
             UserModel(
                 null,
                 userName,
@@ -274,8 +293,7 @@ class SignOnFragment : Fragment() {
                 email,
                 hashedPassword,
                 hash
-            ),
-            getIdlingResource()
+            )
         ) { response ->
             if (response != null) {
                 println("in callback $response")
@@ -335,11 +353,13 @@ class SignOnFragment : Fragment() {
                         email = checkEmail(text)
 
                     } catch (e: IllegalArgumentException) {
+                        // Populate the error message in the EditText
+                        emailError.text = if(text.isNotEmpty())e.message
+                        else ERROR_CONSTANTS.EMAIL_EMPTY
                         email = ""
                         // Handle the error (invalid email format)
                         e.printStackTrace()
-                        // Populate the error message in the EditText
-                        emailError.text = e.message
+
                     }
                 } else {
                     email = ""
@@ -348,24 +368,5 @@ class SignOnFragment : Fragment() {
             }
         }
     }
-
-    private fun showDialog(title:String, message:String, nextView:Int) {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle(title)
-            .setMessage(message)
-            .setPositiveButton(getString(R.string.OK_BUTTON)) { dialog, _ ->
-                dialog.dismiss()
-                // Navigate to the login screen
-                view?.findNavController()?.navigate(nextView)
-            }
-        val dialog = builder.create()
-        dialog.show()
-    }
-
-    fun getIdlingResource(): IdlingTool {
-        if(this.idlingResource == null) idlingResource = IdlingTool()
-        return idlingResource
-    }
-
 
 }
