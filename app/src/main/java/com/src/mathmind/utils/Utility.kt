@@ -43,9 +43,10 @@ class Utility {
             }
         }
 
-        fun validatePassword(password: String):String{
+        fun validatePassword(password: String): Set<String> {
 
             val validationMap = mapOf(
+                ERROR.PASSWORD_EMPTY to (!password.isNullOrEmpty()),
                 ERROR.LEAST_LENGTH to (password.length >= 8),
                 ERROR.WHITESPACE to (password.none { it.isWhitespace() }),
                 ERROR.DIGIT to (password.any { it.isDigit() }),
@@ -55,18 +56,10 @@ class Utility {
             )
 
             //list of failures
-            val errorList = validationMap.filter { !it.value }.keys
-
-            //if any failures create error message and throw error
-            if( errorList.isNotEmpty())
-                throw IllegalArgumentException(
-                    errorList.joinToString("\n","Error list:\n")
-                )
-
-            return password
+            return validationMap.filter { !it.value }.keys
         }
 
-        fun getCurrentDate(pattern:String): String {
+        fun getCurrentDate(pattern: String): String {
             // Define the desired date format
             val formatter: DateTimeFormatter =
                 DateTimeFormatter.ofPattern(pattern)
@@ -78,9 +71,13 @@ class Utility {
         * placed number , not_placed number
         * also updating data
         * */
-        fun evaluateNumber(numberKept: Int, data: GuessModel, scoreCalculus: ScoreCalculus? = null):FeedBackData {
+        fun evaluateNumber(
+            numberKept: Int,
+            data: GuessModel,
+            scoreCalculus: ScoreCalculus? = null,
+        ): FeedBackData {
             val feedBack = if (data.guessedNumber == numberKept) {
-                FeedBackData(4,0)
+                FeedBackData(4, 0)
             } else {
                 generateFeedBack(
                     numToArray(numberKept),
@@ -94,10 +91,14 @@ class Utility {
             return feedBack
         }
 
-        fun generateFeedBack(keptNumArray:List<Int>, numToCompare:List<Int>, scoreCalculus: ScoreCalculus?): FeedBackData{
-            val feedback = FeedBackData(0,0)
+        fun generateFeedBack(
+            keptNumArray: List<Int>,
+            numToCompare: List<Int>,
+            scoreCalculus: ScoreCalculus?,
+        ): FeedBackData {
+            val feedback = FeedBackData(0, 0)
 
-            numToCompare.forEachIndexed{index,digit->
+            numToCompare.forEachIndexed { index, digit ->
                 if (keptNumArray[index] == digit) {
                     scoreCalculus?.setPositionalPoint(index, true)
                     feedback.placedNumber++

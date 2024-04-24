@@ -43,7 +43,7 @@
     <string name="game_end">GAME END!</string>
     <string name="you_win">Congratulations You Won, your point is: %1$d</string>
     <string name="i_win">Thanks for playing: </string>
-    <string name="sign_on_header">SING ON</string>
+    <string name="sign_on_header">SIGN ON</string>
     <string name="fragment_login">Login</string>
     <string name="feedback_numbers_list_header">FeedBack history</string>
     <string name="done">DONE</string>

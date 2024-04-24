@@ -2,6 +2,7 @@ package com.src.mathmind.utils
 
 class LogTag {
     companion object {
+        const val SIGN_ON_VIEW = "SIGN ON VIEW"
         const val MAIN_ACTIVITY = "MAIN ACTIVITY"
         const val GUESSER_FRAGMENT = "GUESSER FRAGMENT"
         const val UI_TEST = "UI_TEST"

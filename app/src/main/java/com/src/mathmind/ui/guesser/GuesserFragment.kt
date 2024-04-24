@@ -41,17 +41,17 @@ class GuesserFragment : Fragment() {
 
     private lateinit var scoreBoard: TextView
     private lateinit var turnCountBoard: TextView
-    private lateinit var digit_cell_1: EditText
-    private lateinit var digit_cell_2: EditText
-    private lateinit var digit_cell_3: EditText
-    private lateinit var digit_cell_4: EditText
-    private lateinit var guess_button: Button
-    private lateinit var guesser_header: TextView
+    private lateinit var digitCell1: EditText
+    private lateinit var digitCell2: EditText
+    private lateinit var digitCell3: EditText
+    private lateinit var digitCell4: EditText
+    private lateinit var guessButton: Button
+    private lateinit var guesserHeader: TextView
     private lateinit var progressBar: ProgressBarBinding
-    private lateinit var guessed_list_view: ListView
+    private lateinit var guessedListView: ListView
     private lateinit var guessNumberCells: Array<EditText>
     private lateinit var userName: String
-    var highlightingActive = false
+    private var highlightingActive = false
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -83,13 +83,13 @@ class GuesserFragment : Fragment() {
         progressBar = binding.progressBar
         scoreBoard = binding.scoreTextField
         turnCountBoard = binding.turnCountBoard
-        guessed_list_view = binding.guestureHistoryList
-        guess_button = binding.guessingButton
-        digit_cell_1 = binding.guessingNumber1
-        digit_cell_2 = binding.guessingNumber2
-        digit_cell_3 = binding.guessingNumber3
-        digit_cell_4 = binding.guessingNumber4
-        guesser_header = binding.guestureHistoryHeader
+        guessedListView = binding.guestureHistoryList
+        guessButton = binding.guessingButton
+        digitCell1 = binding.guessingNumber1
+        digitCell2 = binding.guessingNumber2
+        digitCell3 = binding.guessingNumber3
+        digitCell4 = binding.guessingNumber4
+        guesserHeader = binding.guestureHistoryHeader
         mainActivity.setShowSignOutVisible(true)
 
         val guessHistoryAdapter: GuestureHistoryAdapter? = context?.let { cont ->
@@ -98,16 +98,16 @@ class GuesserFragment : Fragment() {
             }
         }
 
-        guessed_list_view.adapter = guessHistoryAdapter
+        guessedListView.adapter = guessHistoryAdapter
 
-        guessNumberCells = arrayOf(digit_cell_1, digit_cell_2, digit_cell_3, digit_cell_4)
+        guessNumberCells = arrayOf(digitCell1, digitCell2, digitCell3, digitCell4)
 
         for (editText in guessNumberCells) {
             assignTextChangeListener(editText, root)
             focusListenerForDigitCells(editText)
         }
 
-        guess_button.setOnClickListener {
+        guessButton.setOnClickListener {
             progressBar.progressBar.visibility = View.VISIBLE
             makeListElementsColorDefault()
 //            numberArray will be null in case validation fails
@@ -139,7 +139,7 @@ class GuesserFragment : Fragment() {
                 }
                 if (!highlightingActive) for (cell in guessNumberCells) cell.text.clear()
                 else highlightingActive = false
-                digit_cell_1.requestFocus()
+                digitCell1.requestFocus()
             }
             progressBar.progressBar.visibility = View.GONE
         }

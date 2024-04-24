@@ -126,7 +126,7 @@ class MainActivity : AppCompatActivity() {
             invalidateOptionsMenu()
             true
         } catch (t: Throwable) {
-            Log.d("", "sign out button visibility could not be able to set for $boolean")
+            Log.d(LogTag.MAIN_ACTIVITY, "sign out button visibility could not be able to set for $boolean")
             false
         }
     }

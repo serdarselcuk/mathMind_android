@@ -2,6 +2,8 @@ package com.src.mathmind.utils
 
 class ERROR_CONSTANTS {
     companion object{
+        const val LAST_NAME_EMPTY = "Please provide a last name"
+        const val FIRST_NAME_EMPTY = "Please provide a first name"
         const val SCORE_SAVE_FAILURE = "Score could not be saved"
         const val VALIDATION_FAILED = "Validation failed"
         const val ERROR_HEADER = "Error"
