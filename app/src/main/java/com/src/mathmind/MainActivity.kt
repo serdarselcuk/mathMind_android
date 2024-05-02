@@ -179,9 +179,14 @@ class MainActivity : AppCompatActivity() {
         navView.menu.forEach { navView.menu.removeItem(it.itemId) }
         lifecycleScope.launch {
             callService().getScoreBoardList { scoreModels ->
-                navView.menu.add(" | User        | Days | Point")
-                scoreModels?.sorted()?.forEachIndexed { index, item ->
-                    navView.menu.add("${index + 1} | $item")
+                if (scoreModels != null) {
+                    navView.menu.add(" | User        | Days | Point")
+                    scoreModels.sorted().forEachIndexed { index, item ->
+                        navView.menu.add("${index + 1} | $item")
+                    }
+                }
+                else {
+                    navView.menu.add(ERROR_CONSTANTS.SERVICE_ERROR)
                 }
             }
         }
