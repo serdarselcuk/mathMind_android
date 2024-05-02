@@ -85,7 +85,6 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 //        navView drawer is being updated with scores to be used for scoreboard purpose
-        navView.menu.add(" | User        | Days | Point")
 
         updateScores()
 
@@ -180,12 +179,9 @@ class MainActivity : AppCompatActivity() {
         navView.menu.forEach { navView.menu.removeItem(it.itemId) }
         lifecycleScope.launch {
             callService().getScoreBoardList { scoreModels ->
-                if (scoreModels != null)
-                    scoreModels.sorted().forEachIndexed { index, item ->
-                        navView.menu.add("${index + 1} | $item")
-                    }
-                else {
-                    navView.menu.add(ERROR_CONSTANTS.SERVICE_ERROR)
+                navView.menu.add(" | User        | Days | Point")
+                scoreModels?.sorted()?.forEachIndexed { index, item ->
+                    navView.menu.add("${index + 1} | $item")
                 }
             }
         }
