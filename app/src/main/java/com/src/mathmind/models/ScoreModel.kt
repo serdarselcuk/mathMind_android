@@ -34,11 +34,11 @@ data class ScoreModel(
     }
 
     override fun compareTo(other: ScoreModel): Int {
-        return this.point - other.point
+        return other.point.compareTo(this.point)
     }
 
     override fun toString(): String {
-        return "${getUserNamePrinted()}\t|\t${calculateDaysPassed()}\t|${getScorePrinted()}"
+        return "${getUserNamePrinted()}\t|\t${calculateDaysPassed()}\t|\t${getScorePrinted()}"
     }
 
     companion object {

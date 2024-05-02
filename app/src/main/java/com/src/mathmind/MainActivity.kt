@@ -49,6 +49,7 @@ class MainActivity : AppCompatActivity() {
         navView = binding.navView
         navController = findNavController(R.id.nav_login)
 
+//        for some pages we won't need to use back button
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_signOn, R.id.nav_login, R.id.nav_home
@@ -83,13 +84,12 @@ class MainActivity : AppCompatActivity() {
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
+//        navView drawer is being updated with scores to be used for scoreboard purpose
         navView.menu.add(" | User        | Days | Point")
 
         updateScores()
 
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 
@@ -137,7 +137,6 @@ class MainActivity : AppCompatActivity() {
         val currentDestination = navController.currentDestination
         when (item.itemId) {
             R.id.action_sign_out -> {
-                var destination: Int? = null
                 ShowDialog().create(
                     this,
                     "Signing Out",
@@ -145,36 +144,32 @@ class MainActivity : AppCompatActivity() {
                     "Yes",
                     "No",
                     onPositiveClick = {
-
-                        destination = when (currentDestination?.id) {
+                        val destination = when (currentDestination?.id) {
                             R.id.nav_guesser -> {
                                 R.id.action_nav_guesser_to_login
                             }
-
                             R.id.nav_feedbacker -> {
                                 R.id.action_nav_feedbacker_to_login
                             }
-
                             else -> {
                                 R.id.action_nav_home_to_login
                             }
                         }
-                    }
+                        try {
+                            navController.navigate(destination)
+                            logOut()
+                            result = true
+                        } catch (t: Throwable) {
+                            Log.d(LogTag.MAIN_ACTIVITY, "Log out could not be realized")
+                        }
+                    },
+                    onNegativeClick = null
                 )
-                result = try {
-                    destination?.let { navController.navigate(it) }
-                    logOut()
-                } catch (t: Throwable) {
-                    Log.d(LogTag.MAIN_ACTIVITY, "Log out could not be realized")
-                    false
-                }
-
             }
-
-            else -> super.onOptionsItemSelected(item)
         }
         return result
     }
+
 
     private fun logOut(): Boolean {
         val loginViewModel = ViewModelProvider(this)[LoginViewModel::class.java]
@@ -186,7 +181,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             callService().getScoreBoardList { scoreModels ->
                 if (scoreModels != null)
-                    scoreModels.sortedBy { it.point }.forEachIndexed { index, item ->
+                    scoreModels.sorted().forEachIndexed { index, item ->
                         navView.menu.add("${index + 1} | $item")
                     }
                 else {
