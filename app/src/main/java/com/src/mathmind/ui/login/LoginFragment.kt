@@ -15,7 +15,6 @@ import com.src.mathmind.MainActivity
 import com.src.mathmind.R
 import com.src.mathmind.databinding.FragmentLoginBinding
 import com.src.mathmind.databinding.ProgressBarBinding
-import com.src.mathmind.models.LoginViewState
 import com.src.mathmind.utils.ERROR_CONSTANTS
 
 

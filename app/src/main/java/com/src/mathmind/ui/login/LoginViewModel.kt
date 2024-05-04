@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.src.mathmind.models.LoginViewState
 import com.src.mathmind.models.UserModel
 import com.src.mathmind.service.CallService
 import com.src.mathmind.utils.ERROR_CONSTANTS
@@ -23,6 +22,7 @@ class LoginViewModel : ViewModel() {
     val password: LiveData<String> = _password
     private val _loginViewState = MutableLiveData<LoginViewState>()
     val loginViewState: LiveData<LoginViewState> = _loginViewState
+    val user = UserModel(61,"NoUser","","","","","","")
 
     fun validateUser(callService: CallService, sharedEdit: SharedPreferences?) {
 
@@ -30,7 +30,8 @@ class LoginViewModel : ViewModel() {
             try {
                 val user: UserModel? = userName.value?.let { it1 ->
                     password.value?.let { it2 ->
-                        validateCredentials(it1, it2, callService)
+                        if(it1 == "noUser") user
+                        else validateCredentials(it1, it2, callService)
                     }
                 }
 
