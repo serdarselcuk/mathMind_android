@@ -10,9 +10,9 @@ import androidx.test.espresso.matcher.ViewMatchers.isFocused
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.src.mathmind.EspressoBase
-import com.src.mathmind.IsIntegerInRangeMatcher
+import com.src.mathmind.TestBase
 import com.src.mathmind.R
+import com.src.mathmind.Utils.IsIntegerInRangeMatcher
 import com.src.mathmind.utils.LogTag
 import org.hamcrest.core.AllOf
 import org.junit.Test
@@ -24,7 +24,7 @@ import org.junit.runner.RunWith
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 @RunWith(AndroidJUnit4::class)
-class GuesserTests : EspressoBase() {
+class GuesserTests : TestBase() {
 
     override fun setup() {
         super.setup()
@@ -34,6 +34,7 @@ class GuesserTests : EspressoBase() {
 
     @Test
     fun user_able_to_get_feedback() {
+        Log.d(LogTag.UI_TEST, "user able to get feedback")
 
         guessNumber("5678")
         onView(

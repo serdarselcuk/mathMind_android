@@ -2,6 +2,7 @@ package com.src.mathmind.utils
 
 class ERROR_CONSTANTS {
     companion object{
+        const val WRONG_FEEDBACK = "No Remaining number to Guess. Please check feedBacks"
         const val LAST_NAME_EMPTY = "Please provide a last name"
         const val FIRST_NAME_EMPTY = "Please provide a first name"
         const val SCORE_SAVE_FAILURE = "Score could not be saved"

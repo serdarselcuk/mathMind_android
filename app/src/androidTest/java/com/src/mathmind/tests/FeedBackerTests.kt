@@ -6,12 +6,12 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import com.src.mathmind.EspressoBase
+import com.src.mathmind.TestBase
 import com.src.mathmind.R
 import com.src.mathmind.utils.LogTag
 import org.junit.Test
 
-class FeedBackerTests : EspressoBase() {
+class FeedBackerTests : TestBase() {
 
     override fun setup() {
         super.setup()

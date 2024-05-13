@@ -10,7 +10,7 @@ import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import com.src.mathmind.EspressoBase
+import com.src.mathmind.TestBase
 import com.src.mathmind.R
 import com.src.mathmind.utils.LogTag
 import com.src.mathmind.utils.ERROR_CONSTANTS
@@ -25,7 +25,7 @@ import org.junit.runner.RunWith
  */
 @RunWith(AndroidJUnit4::class)
 @LargeTest
-class LoginTests : EspressoBase() {
+class LoginTests : TestBase() {
 
     @Test
     fun user_enters_wrong_userName() {

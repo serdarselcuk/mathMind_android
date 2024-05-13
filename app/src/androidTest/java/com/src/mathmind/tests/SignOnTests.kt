@@ -5,7 +5,7 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
-import com.src.mathmind.EspressoBase
+import com.src.mathmind.TestBase
 import com.src.mathmind.R
 import com.src.mathmind.utils.ERROR_CONSTANTS
 import com.src.mathmind.utils.LogTag
@@ -13,7 +13,7 @@ import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.containsString
 import org.junit.Test
 
-class SignOnTests : EspressoBase() {
+class SignOnTests : TestBase() {
 
     override fun setup(){
         super.setup()

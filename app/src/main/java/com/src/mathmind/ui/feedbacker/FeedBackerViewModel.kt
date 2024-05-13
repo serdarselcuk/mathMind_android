@@ -9,6 +9,7 @@ import com.src.mathmind.models.GuessModel
 import com.src.mathmind.utils.LogTag
 import com.src.mathmind.utils.ERROR_CONSTANTS
 import com.src.mathmind.utils.Utility
+import java.util.stream.Collectors
 import kotlin.random.Random
 
 class FeedBackerViewModel : ViewModel() {
@@ -33,7 +34,7 @@ class FeedBackerViewModel : ViewModel() {
         MutableLiveData<MutableList<GuessModel>>().apply { value = mutableListOf() }
     val feedBackHistory: LiveData<MutableList<GuessModel>> = _feedBackHistory
 
-    private val _numbersHistory : MutableMap<Int, MutableList<Int>> = mutableMapOf()
+    private val _removedNumbersHistory : MutableMap<Int, MutableList<Int>> = mutableMapOf()
 
     private val _feedBackStatus = MutableLiveData<FeedBackerViewState>()
         .apply { value = FeedBackerViewState.NEW }
@@ -85,10 +86,12 @@ class FeedBackerViewModel : ViewModel() {
             }
             if (feedBackHistory.value?.size == 1) evaluateFirstFeedback(guessModel)
             else evaluateFeedback(guessModel)
-        } else throw RuntimeException(ERROR_CONSTANTS.GUESS_MODEL_NOT_FOUND
-        )
+        } else throw RuntimeException(ERROR_CONSTANTS.GUESS_MODEL_NOT_FOUND)
 
-        guessNumber(possibleNumbers[Random.nextInt(possibleNumbers.size)])
+        if(possibleNumbers.size >0)
+            guessNumber(possibleNumbers[Random.nextInt(possibleNumbers.size)])
+        else
+            throw RuntimeException(ERROR_CONSTANTS.WRONG_FEEDBACK)
     }
 
     private fun evaluateFirstFeedback(guessModel: GuessModel) {
@@ -116,7 +119,7 @@ class FeedBackerViewModel : ViewModel() {
         }
 
         possibleNumbers.removeAll(numbersToRemove)
-        _numbersHistory[guessModel.guessedNumber] = numbersToRemove
+        _removedNumbersHistory[guessModel.guessedNumber] = numbersToRemove
         Log.d(
             LogTag.FEEDBACKER_VIEW_MODEL,
             "Possible number size: ${possibleNumbers.size}")
@@ -148,6 +151,31 @@ class FeedBackerViewModel : ViewModel() {
                 )
             )
         )
+    }
+
+    fun undoFeedBacks(i:Int){
+//       if i = 1 we will undo only the last feedback
+        val indexToStartRemove= if(i==-1) feedBackHistory.value?.size?.minus(1)!!
+        else i
+        val moveBackToGuessNumber = _feedBackHistory.value!![indexToStartRemove] .guessedNumber
+        val historyToBeRemoved = _feedBackHistory.value?.stream()?.filter{ data ->
+            _feedBackHistory.value!!.indexOf(data) >= indexToStartRemove}?.collect(Collectors.toList())
+//        if history found
+        if(historyToBeRemoved is List<GuessModel>) {
+//            each history has removed some guessable numbers. adding them back and removing from history
+            historyToBeRemoved.forEach{
+                undoPossibleNumbers(it.guessedNumber)
+            }
+//            removing history of feedback
+            _feedBackHistory.value?.removeAll(historyToBeRemoved)
+            guessNumber(moveBackToGuessNumber)
+        }
+    }
+
+    private fun undoPossibleNumbers(guessedNumbers:Int){
+        _removedNumbersHistory[guessedNumbers]
+            ?.let { it1 -> possibleNumbers.addAll(it1) }
+        _removedNumbersHistory.remove(guessedNumbers)
     }
 
 }

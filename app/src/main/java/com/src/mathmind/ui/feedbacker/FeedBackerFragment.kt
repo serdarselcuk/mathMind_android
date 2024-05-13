@@ -7,21 +7,29 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView.OnItemClickListener
 import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
+import androidx.core.text.set
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.src.mathmind.MainActivity
 import com.src.mathmind.R
+import com.src.mathmind.databinding.DigitCellsBinding
 import com.src.mathmind.databinding.FragmentFeedbackerBinding
 import com.src.mathmind.databinding.ProgressBarBinding
 import com.src.mathmind.ui.guesser.GuestureHistoryAdapter
+import com.src.mathmind.utils.ERROR_CONSTANTS
 import com.src.mathmind.utils.LogTag
 import com.src.mathmind.utils.RandomGenerator
+import com.src.mathmind.utils.Utility
 import kotlinx.coroutines.launch
+import java.lang.RuntimeException
+import kotlin.math.min
+
 
 class FeedBackerFragment : Fragment() {
 
@@ -32,9 +40,9 @@ class FeedBackerFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var plusButton: Button
     private lateinit var minusButton: Button
-    private lateinit var plusNumberTestView: TextView
-    private lateinit var minusNumberTestView: TextView
-    private lateinit var guessedNumberTestView: TextView
+    private lateinit var plusNumberTextView: TextView
+    private lateinit var minusNumberTextView: TextView
+    private lateinit var guessedNumberTextView: DigitCellsBinding
     private lateinit var feedbackHistoryView: ListView
     private lateinit var doneButton: Button
     private lateinit var feedBackerViewModel: FeedBackerViewModel
@@ -55,7 +63,7 @@ class FeedBackerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         feedBackerViewModel.feedBackStatus.observe(viewLifecycleOwner) { phase ->
-            Log.d("FEEDBACKER_OBSERVER", "Status getting Observed: $phase")
+            Log.d(LogTag.FEEDBACKER_OBSERVER,"Status getting Observed: $phase")
             when (phase) {
                 FeedBackerViewState.NEW -> {
                     doneButton.text = getString(R.string.ready)
@@ -65,16 +73,15 @@ class FeedBackerFragment : Fragment() {
                 FeedBackerViewState.EVALUATING -> {
                     progressBar.progressBar.visibility = View.VISIBLE
                     doneButton.text = getString(R.string.wait)
-                    guessedNumberTestView.text = "- - - -"
                     doneButton.isActivated = false
-                    plusNumberTestView.text = ""
-                    minusNumberTestView.text = ""
+                    plusNumberTextView.text = "0"
+                    minusNumberTextView.text = "0"
                     guessHistoryAdapter.notifyDataSetChanged()
                 }
 
                 FeedBackerViewState.WAITING -> {
                     progressBar.progressBar.visibility = View.GONE
-                    guessedNumberTestView.text = feedBackerViewModel.guessNum.value.toString()
+                    feedBackerViewModel.guessNum.value?.let { fillDigitCells(it) }
                     doneButton.text = getString(R.string.done)
                     doneButton.isActivated = true
                 }
@@ -102,9 +109,9 @@ class FeedBackerFragment : Fragment() {
         progressBar = binding.progressBar
         plusButton = binding.plusButton
         minusButton = binding.minusButton
-        plusNumberTestView = binding.plusCount
-        minusNumberTestView = binding.minusCount
-        guessedNumberTestView = binding.feedbackerNumberView
+        plusNumberTextView = binding.plusCount
+        minusNumberTextView = binding.minusCount
+        guessedNumberTextView = binding.containerDigitCells
         feedbackHistoryView = binding.feedbackHistoryList
         doneButton = binding.doneButton
         guessHistoryAdapter = feedBackerViewModel.feedBackHistory.value?.let {
@@ -112,6 +119,22 @@ class FeedBackerFragment : Fragment() {
         }!!
 
         feedbackHistoryView.adapter = guessHistoryAdapter
+
+        feedbackHistoryView.onItemClickListener =
+            OnItemClickListener { _, _, position, _ ->
+                ShowDialog().create(
+                    requireContext(),
+                    getString(R.string.wrong_feedback),
+                    getString(R.string.do_you_want_to_move_back_to_this_feedback),
+                    getString(R.string.undo),
+                    getString(android.R.string.cancel),
+                    onPositiveClick = {
+                        feedBackerViewModel.undoFeedBacks(position)
+                        guessHistoryAdapter.notifyDataSetChanged()
+                    },
+                    onNegativeClick = null
+                )
+            }
 
         setClickListeners(plusButton)
         setClickListeners(minusButton)
@@ -186,7 +209,25 @@ class FeedBackerFragment : Fragment() {
                             feedBackerViewModel.updateFeedbackHistory()
                             feedBackerViewModel.setStatus(FeedBackerViewState.EVALUATING)
                             lifecycleScope.launch {
-                                feedBackerViewModel.guessNumber()
+                                try {
+                                    feedBackerViewModel.guessNumber()
+                                }catch (e: RuntimeException){
+                                    e.localizedMessage?.let { it1 ->
+                                        ShowDialog().create(
+                                            requireContext(),
+                                            ERROR_CONSTANTS.ERROR_HEADER,
+                                            it1,
+                                            getString(android.R.string.ok),
+                                            null,
+                                            onPositiveClick = {
+                                                feedBackerViewModel.undoFeedBacks(-1)
+                                                guessHistoryAdapter.notifyDataSetChanged()
+                                                feedBackerViewModel.setStatus(FeedBackerViewState.WAITING)
+                                            },
+                                            null
+                                        )
+                                    }
+                                }
                                 updateGuessNumberView(feedBackerViewModel.guessNum.value)
                                 feedBackerViewModel.resetFeedback()
                             }
@@ -200,22 +241,20 @@ class FeedBackerFragment : Fragment() {
     }
 
     private fun updateGuessNumberView(num: Int?) {
-        if (num is Int) guessedNumberTestView.text = num.toString()
+        if (num is Int) fillDigitCells(num)
         else throw NullPointerException("Guess number could not be found")
     }
 
     private fun updateEvaluation() {
-        minusNumberTestView.text = feedBackerViewModel.minus.value.toString()
-        plusNumberTestView.text = feedBackerViewModel.plus.value.toString()
+        minusNumberTextView.text = getString(R.string.minus_sign_with_digit, feedBackerViewModel.minus.value?:0)
+        plusNumberTextView.text = getString(R.string.plus_sign_with_digit, feedBackerViewModel.plus.value?:0)
     }
 
-
     override fun onDestroyView() {
-        Log.d(LogTag.FEEDBACKER_FRAGMENT, "Destroying")
+        Log.d(LogTag.FEEDBACKER_FRAGMENT, "Destroying view")
         super.onDestroyView()
         _binding = null
     }
-
 
     private fun endGame() {
         context?.let {
@@ -231,7 +270,15 @@ class FeedBackerFragment : Fragment() {
                 }
             )
         }
-        println("game end")
+        Log.d(LogTag.FEEDBACKER_FRAGMENT,"...game end")
+    }
+
+    private fun fillDigitCells(num: Int){
+        val numArray = Utility.numToArray(num)
+        guessedNumberTextView.guessingNumber1.text = numArray[0].toString()
+        guessedNumberTextView.guessingNumber2.text = numArray[1].toString()
+        guessedNumberTextView.guessingNumber3.text = numArray[2].toString()
+        guessedNumberTextView.guessingNumber4.text = numArray[3].toString()
     }
 
 }

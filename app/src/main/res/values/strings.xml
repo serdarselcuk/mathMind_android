@@ -25,6 +25,8 @@
     <string name="turn_count"> turn: %1$d</string>
     <string name="plus_sign">+</string>
     <string name="minus_sign">-</string>
+    <string name="plus_sign_with_digit">+ %1$d</string>
+    <string name="minus_sign_with_digit">- %1$d</string>
     <string name="username">userName</string>
     <string name="Password">Password</string>
     <string name="confirm_password">Confirm Password</string>
@@ -55,4 +57,9 @@
 <string name="sign_out_description">Are you sure you want to sign out?</string>
     <string name="sign_out_title">Signing out!</string>
     <string name="user_score">%1$s Score: %2$d</string>
+    <string name="placed_digits">Placed digits</string>
+    <string name="non_placed_digits">Non-placed digits</string>
+    <string name="undo">Undo</string>
+    <string name="do_you_want_to_move_back_to_this_feedback">Do you want to move back to this feedback?</string>
+    <string name="wrong_feedback">Wrong feedback?</string>
 </resources>

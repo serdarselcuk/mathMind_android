@@ -22,7 +22,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 
-open class EspressoBase {
+open class TestBase {
 
     private val userName: String = "use_2"
     private val password: String = "Password1."
@@ -99,18 +99,5 @@ open class EspressoBase {
         onView(withId(R.id.feedbackerButton))
             .perform(ViewActions.click())
         onView(withText("OK")).perform(ViewActions.click())
-    }
-}
-
-
-class IsIntegerInRangeMatcher(private val min: Int, private val max: Int) :
-    TypeSafeMatcher<String>() {
-
-    override fun matchesSafely(item: String?): Boolean {
-        return item?.toIntOrNull() in min..max
-    }
-
-    override fun describeTo(description: Description?) {
-        description?.appendText("an integer between $min and $max")
     }
 }
